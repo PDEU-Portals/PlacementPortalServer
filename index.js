@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
-app.use('/contollers', controllers);
+app.use('/controllers', controllers);
 
 app.use((err, req, res, next) => {
     console.log(err);
