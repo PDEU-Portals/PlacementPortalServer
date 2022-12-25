@@ -53,16 +53,14 @@ const userSchema = new Schema({
         type: [String],
     },
     contactDetails: {
-        nested: {
-            emailId: {
-                type: String,
-                required: true,
-            },
-            phoneNumber: {
-                type: String, 
-                required: true,
-            },
-        }
+        emailId: {
+            type: String,
+            required: true,
+        },
+        phoneNumber: {
+            type: String, 
+            required: true,
+        },
     },
 });
 
