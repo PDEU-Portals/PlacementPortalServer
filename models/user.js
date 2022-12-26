@@ -1,9 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 /*
     Add link to database in .env file after doing necessary stuff wrt MongoDB
     
