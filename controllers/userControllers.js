@@ -66,3 +66,15 @@ exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
     const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
     sendToken(userAction, 200, res);
 });
+
+//Update socialMediaHandles of user  =>     /api/v1/socialMediaHandlesUpdate
+exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
+    const socialMediaHandles = req.body.socialMediaHandles;
+
+    if (!socialMediaHandles){
+        return next(new ErrorHandler(`Please enter skills!`, 400))
+    }
+
+    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    sendToken(userAction, 200, res);    
+})
