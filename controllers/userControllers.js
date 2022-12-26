@@ -46,13 +46,12 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const skills = req.body.skills;
-
     if (!skills)
     {
         return next(new ErrorHandler(`Please enter skills!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    const userAction = await User.findOneAndUpdate({email: req.body.email}, {skills: skills})
     sendToken(userAction, 200, res);
 });
 
@@ -60,13 +59,12 @@ exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
 exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const projects = req.body.projects;
-
     if (!projects)
     {
-        return next(new ErrorHandler(`Please enter skills!`, 400))
+        return next(new ErrorHandler(`Please enter projects!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    const userAction = await User.findOneAndUpdate({email: req.body.email}, {projects: projects})
     sendToken(userAction, 200, res);
 });
 
@@ -74,11 +72,10 @@ exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
 exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const socialMediaHandles = req.body.socialMediaHandles;
-
     if (!socialMediaHandles){
-        return next(new ErrorHandler(`Please enter skills!`, 400))
+        return next(new ErrorHandler(`Please enter social media handles!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    const userAction = await User.findOneAndUpdate({email: req.body.email}, {socialMediaHandles: socialMediaHandles})
     sendToken(userAction, 200, res);    
 })

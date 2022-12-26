@@ -62,7 +62,7 @@ const userSchema = new Schema({
     phoneNumber: String,
     socialMediaHandles: {
         type: [String],
-    } 
+    },
 });
 
 userSchema.pre("save", async function (next) {
