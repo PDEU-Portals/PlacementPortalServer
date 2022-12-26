@@ -5,10 +5,8 @@ const sendToken = require('../utils/jwtToken');
 
 // Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-    console.log(req)//for testing
-    const name = req.body.userName
-    const email = req.body.email
-    const password = req.body.password
+    //console.log(req)//for testing
+    const {name, email, password} = req.body
 
     if(email.split("@")[1] == "sot.pdpu.ac.in"){
         const user = await User.create({
@@ -25,9 +23,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 )
 // Login user => /api/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
-    console.log(req)//for testing
-    const email  = req.body.email; 
-    const password = req.body.password;
+    //console.log(req)//for testing
+    const {email, password} = req.body
 
     //checking if email and password is entered by user
     if (!email || !password) {
@@ -47,7 +44,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
 //Update skills of user =>  /api/v1/skillsUpdate
 exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
-    console.log(req)//for testing
+    //console.log(req)//for testing
     const skills = req.body.skills;
 
     if (!skills)
@@ -61,7 +58,7 @@ exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
 
 //update projects of user => /api/v1/projectsUpdate
 exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
-    console.log(req)//for testing
+    //console.log(req)//for testing
     const projects = req.body.projects;
 
     if (!projects)
@@ -75,7 +72,7 @@ exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
 
 //Update socialMediaHandles of user  =>     /api/v1/socialMediaHandlesUpdate
 exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
-    console.log(req)//for testing
+    //console.log(req)//for testing
     const socialMediaHandles = req.body.socialMediaHandles;
 
     if (!socialMediaHandles){
