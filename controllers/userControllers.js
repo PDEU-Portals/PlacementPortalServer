@@ -6,8 +6,10 @@ const sendToken = require('../utils/jwtToken');
 // Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     console.log(req)//for testing
+    const name = req.body.userName
+    const email = req.body.email
+    const password = req.body.password
 
-    const { name, email, password } = req.body;
     if(email.split("@")[1] == "sot.pdpu.ac.in"){
         const user = await User.create({
             name,
@@ -24,7 +26,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 // Login user => /api/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     console.log(req)//for testing
-    const { email, password } = req.body;
+    const email  = req.body.email; 
+    const password = req.body.password;
 
     //checking if email and password is entered by user
     if (!email || !password) {
