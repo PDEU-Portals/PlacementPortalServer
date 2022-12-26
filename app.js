@@ -23,5 +23,10 @@ app.use(
 //logging
 app.use(morgan('tiny'))
 
+//routes
+const user = require("./routes/userRoutes")
+
+//routes middleware
+app.use("/api/v1", user)
 
 module.exports = app
