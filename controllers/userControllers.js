@@ -2,6 +2,7 @@ const ErrorHandler = require('../utils/errorhandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const User = require('../models/user');
 const sendToken = require('../utils/jwtToken');
+const { findOneAndUpdate } = require('../models/user');
 
 // Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -38,4 +39,17 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Invalid Email or Password', 401))
     }
     sendToken(user, 200, res);
+});
+
+//Update skills of user =>  /api/v1/skillsUpdate
+exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
+    const skills = req.body.skills;
+
+    if (!skills)
+    {
+        return next(new ErrorHandler(`Please enter skills!`, 400))
+    }
+
+    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    sendToken(userAction, 200, res);
 });

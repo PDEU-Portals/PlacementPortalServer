@@ -60,7 +60,10 @@ const userSchema = new Schema({
     publications: {
         type: [String],
     },
-    phoneNumber: String
+    phoneNumber: String,
+    socialMediaHandles: {
+        type: [String],
+    } 
 });
 
 userSchema.pre("save", async function (next) {
