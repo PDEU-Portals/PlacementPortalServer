@@ -53,3 +53,16 @@ exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
     const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
     sendToken(userAction, 200, res);
 });
+
+//update projects of user => /api/v1/projectsUpdate
+exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
+    const projects = req.body.projects;
+
+    if (!projects)
+    {
+        return next(new ErrorHandler(`Please enter skills!`, 400))
+    }
+
+    const userAction = await User.findOneAndUpdate({email: req.body.email, password: req.body.password})
+    sendToken(userAction, 200, res);
+});
