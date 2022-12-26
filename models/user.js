@@ -42,12 +42,12 @@ const userSchema = new Schema({
         type: [String],
     },
     cgpa: {
-        type: Number,
+        type: String,
         required: true,
     },
     workExperience: {
-        type: Number,
-        default: 0,
+        role: String,
+        description: String
     },
     publications: {
         type: [String],
@@ -55,11 +55,9 @@ const userSchema = new Schema({
     contactDetails: {
         emailId: {
             type: String,
-            required: true,
         },
         phoneNumber: {
-            type: String, 
-            required: true,
+            type: String,
         },
     },
 });
