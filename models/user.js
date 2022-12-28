@@ -1,8 +1,8 @@
-const express = require('express');
+// const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+// const bcrypt = require('bcryptjs')
+// const jwt = require('jsonwebtoken')
 
 /*
     Add link to database in .env file after doing necessary stuff wrt MongoDB
@@ -60,28 +60,31 @@ const userSchema = new Schema({
     publications: {
         type: [String],
     },
-    phoneNumber: String
-});
-
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) {
-      next();
+    phoneNumber: String,
+    socialMediaHandles: {
+        type: [String],
     }
-  
-    this.password = await bcrypt.hash(this.password, 10);
 });
 
+// userSchema.pre("save", async function (next) {
+//     if (!this.isModified("password")) {
+//       next();
+//     }
+  
+//     this.password = await bcrypt.hash(this.password, 10);
+// });
 
-userSchema.methods.getJwtToken = function () {
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_TIME
-    })
-}
 
-//Compare user password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
-}
+// userSchema.methods.getJwtToken = function () {
+//     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+//         expiresIn: process.env.JWT_EXPIRES_TIME
+//     })
+// }
+
+// //Compare user password
+// userSchema.methods.comparePassword = async function (enteredPassword) {
+//     return await bcrypt.compare(enteredPassword, this.password);
+// }
 
 const User = mongoose.model('users', userSchema);
 
