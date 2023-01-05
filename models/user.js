@@ -23,12 +23,42 @@ const Schema = mongoose.Schema;
     publications            array of strings                     Because we can add links to multiple publications
     contacts                defined as shown in Schema           For convenience              
 */
+/* 
+    For making effective data read, normalization of the Database with 3 Schemas (UserSchema, RecruiterSchema, JobPostedSchema)
+
+*/
+/*
+    Defining the Schema Pattern for Recruiter portal 
+
+    Recruiter Schema
+
+    Parameter   --->    Data Type   
+    Headline            String
+    Job/Internship      String
+    Pref. Branches      String
+    Full/Part-time      String
+    Jobs Posted         array of Objects ( Fields : job_id String )  
+        
+    
+    JobPosted Schema
+
+    Parameter   ----->>     Data Type
+    Rec_id                  String (To be Referenced from Recruiter Schema)
+    date_posted             Date
+    user_applied            Array (Fields : 
+        user_id,            String
+        Submission_date,    String
+        pproval             boolean
+        )
+
+*/
 
 const userSchema = new Schema({
     userName: {
         type: String,
         // required: [true, 'Please enter your name'],
     },
+    name : {type:String},
     email: {
         type: String,
         // required: [true, 'Please enter your email'],
@@ -63,8 +93,37 @@ const userSchema = new Schema({
     phoneNumber: String,
     socialMediaHandles: {
         type: [String],
-    }
+    },
+
+    jobs_applied : [
+        {
+            recruiter_id: {type: String},
+            job_id : {type: String},
+            date_of_submission: {type: Date}
+        }
+    ]
 });
+
+const RecruiterSchema = new Schema({
+    CompanyName: { type: String },
+    Description: { type: String },
+
+    jobs_posted: [  {   job_id : { type: String }   }  ]//To be referenced from JobPost Model
+});
+
+const JobPost = new Schema({
+            recruiter_id : { type: String }, //To be referenced from Recruiter Schema
+            job_id : { type: String },
+            headline : {type: String},
+            job_type : {type: String},
+            job_description : {type: String},
+            Pref_branches : [{ type: String }], //Array of Strings
+            deadline : {type: Date},
+            dateofPosting : {type: Date},
+            approved : {type: Boolean},
+            users_applied : [  {  user_id: {type:String}, dateofSubmission: {type: String}  }  ]
+});
+
 
 // userSchema.pre("save", async function (next) {
 //     if (!this.isModified("password")) {
@@ -87,5 +146,7 @@ const userSchema = new Schema({
 // }
 
 const User = mongoose.model('users', userSchema);
+const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
+const Jobposting = mongoose.model ('jobpost', JobPost);
 
-module.exports = User;
+module.exports = User,Recruiter, Jobposting;
