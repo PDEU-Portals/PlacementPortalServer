@@ -80,7 +80,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 //Update skills of user =>  /api/v1/skillsUpdate
-exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
+exports.skillsUpdater = catchAsyncErrors(async(req, res, next) => {
     //console.log(req)//for testing
     const skills = req.body.skills;
     console.log(skills)
@@ -94,7 +94,7 @@ exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
 });
 
 //update projects of user => /api/v1/projectsUpdate
-exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
+exports.projectsUpdater = catchAsyncErrors(async(req, res, next) => {
     //console.log(req)//for testing
     const projects = req.body.projects;
     if (!projects)
@@ -107,7 +107,7 @@ exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
 });
 
 //Update socialMediaHandles of user  =>     /api/v1/socialMediaHandlesUpdate
-exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
+exports.socialMediaHandlesUpdater = catchAsyncErrors(async(req, res, next) => {
     //console.log(req)//for testing
     const socialMediaHandles = req.body.socialMediaHandles;
     if (!socialMediaHandles){
@@ -205,15 +205,15 @@ exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
 // }
 
 //Getting userId
-const getUserId = (req,res)=>{
-    const {name, userName} = req.body;
+const getUserId = (req, res) => {
+    const {name, email} = req.body;
 
-    let user_id = User.findOne({userName: userName, name: name})._id;
+    let user_id = User.findOne({name: name, email: email})._id;
     return user_id;
 }
 
 //Apply for Job From Users end
-const applyJobForUser = async(req, res) =>  {
+const applyJobForUser = async(req, res) => {
     const Recruiter_id = getRecruiterid;
     let Job_id = getJobPosting;
     let user_id = getUserId;
@@ -231,18 +231,27 @@ catch(err){
 
 //Updating the User Profile on Getting Applied
 const getJobsAppliedForUser = async(req, res)=>{
-    const {name, userName} = req.body;
+    const {name, email} = req.body;
     const recruiter_id = getRecruiter;
     let job_id = getJobPosting;
     let user_id = getUserId;
     try{
-let updateUser = await User.UpdateOne({_id: user_id, userName: userName, name: name}, {$push: {jobs_applied : {recruiter_id: recruiter_id, job_id: job_id,/* date_Of_Submission */}}});
-res.status(200).json(updateUser);   
-}
-    catch(err){
+        let updateUser = await User.UpdateOne({_id: user_id, name: name, email:email}, {$push: {jobs_applied : {recruiter_id: recruiter_id, job_id: job_id,/* date_Of_Submission */}}});
+        res.status(200).json(updateUser);   
+    }catch(err){
         res.status(400).send({err: err.message});
-        
     }
+}
+
+//--> Projects CRUD
+// Projects getting 
+exports.getProjectsOfUser = async(req, res) => {
+
+}
+
+//Projects updating
+exports.postProjectsOfUser = async(req, res) => {
+
 }
 
 module.exports = {getUserId, applyJobForUser, getJobsAppliedForUser};
