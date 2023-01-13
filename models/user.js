@@ -54,11 +54,11 @@ const Schema = mongoose.Schema;
 */
 
 const userSchema = new Schema({
-    userName: {
-        type: String,
-        // required: [true, 'Please enter your name'],
-    },
-    name : {type:String},
+    // userName: {
+    //     type: String,
+    //     // required: [true, 'Please enter your name'],
+    // },   --> userName is not NECESSARY!!!!
+    name : {type: String},
     email: {
         type: String,
         // required: [true, 'Please enter your email'],
@@ -78,7 +78,19 @@ const userSchema = new Schema({
         type: [String],
     },
     projects: {
-        type: [String],
+        type: [{
+            Name: "",
+            Tech_Stack: "",
+            TimeStamps: "",
+            GitHub_Link: "",
+        }],
+        /*
+        array of objects
+        1) name
+        2) tech stack
+        3) timestamps
+        4) github link
+        */
     },
     cgpa: {
         type: String,
