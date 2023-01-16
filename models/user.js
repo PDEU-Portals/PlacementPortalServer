@@ -1,6 +1,7 @@
 // const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const jobpost = require('../models/JobPosting');
 // const bcrypt = require('bcryptjs')
 // const jwt = require('jsonwebtoken')
 
@@ -102,39 +103,46 @@ const userSchema = new Schema({
     publications: {
         type: [String],
     },
-    phoneNumber: String,
+    phoneNumber: {type: Number},
     socialMediaHandles: {
         type: [String],
     },
 
     jobs_applied : [
         {
-            recruiter_id: {type: String},
-            job_id : {type: String},
-            date_of_submission: {type: Date}
+            type: Schema.Types.ObjectID,
+            ref: 'jobpost'
+    //         recruiter_id: {type: String},
+    //         job_id : {type: String},
+    //         date_of_submission: {type: Date}
         }
     ]
 });
 
-const RecruiterSchema = new Schema({
-    CompanyName: { type: String },
-    Description: { type: String },
 
-    jobs_posted: [  {   job_id : { type: String }   }  ]//To be referenced from JobPost Model
-});
 
-const JobPost = new Schema({
-            recruiter_id : { type: String }, //To be referenced from Recruiter Schema
-            job_id : { type: String },
-            headline : {type: String},
-            job_type : {type: String},
-            job_description : {type: String},
-            Pref_branches : [{ type: String }], //Array of Strings
-            deadline : {type: Date},
-            dateofPosting : {type: Date},
-            approved : {type: Boolean},
-            users_applied : [  {  user_id: {type:String}, dateofSubmission: {type: String}  }  ]
-});
+//Recruiter Schema
+// const RecruiterSchema = new Schema({
+//     CompanyName: { type: String },
+//     Description: { type: String },
+
+//     jobs_posted: [  {   job_id : { type: String }   }  ]//To be referenced from JobPost Model
+// });
+
+
+//Job posting schema
+// const JobPost = new Schema({
+//             recruiter_id : { type: String }, //To be referenced from Recruiter Schema
+//             job_id : { type: String },
+//             headline : {type: String},
+//             job_type : {type: String},
+//             job_description : {type: String},
+//             Pref_branches : [{ type: String }], //Array of Strings
+//             deadline : {type: Date},
+//             dateofPosting : {type: Date},
+//             approved : {type: Boolean},
+//             users_applied : [  {  user_id: {type:String}, dateofSubmission: {type: String}  }  ]
+// });
 
 
 // userSchema.pre("save", async function (next) {
@@ -158,7 +166,7 @@ const JobPost = new Schema({
 // }
 
 const User = mongoose.model('users', userSchema);
-const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
-const Jobposting = mongoose.model ('jobpost', JobPost);
+// const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
+// const Jobposting = mongoose.model ('jobpost', JobPost);
 
 module.exports = User,Recruiter, Jobposting;
