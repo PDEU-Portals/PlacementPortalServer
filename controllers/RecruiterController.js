@@ -19,11 +19,11 @@ const NewRecruiter = async(req, res)=>{
     }
 }
 
-const getRecruiterid = (req,res)=>{
+const getRecruiterId = (req,res)=>{
     const {Company_Name} = req.body;
     try{
-        const recruiter_id = await (Recruiter.findOne({CompanyName : Company_Name}))._id; //Can be used to parse in different queries for fetching apis
-        return recruiter_id;
+        const recruiterId = await (Recruiter.findOne({CompanyName : Company_Name}))._id; //Can be used to parse in different queries for fetching apis
+        return recruiterId;
     }
     catch{
         res.status(401).send({err: err.message});
@@ -37,7 +37,7 @@ const getRecruiter = async(req, res)=>{
             res.status(200).json(result);
         });
         res.status(200).json(recruiter);
-       return res.status(200).json(recruiter_id);
+       return res.status(200).json(recruiterId);
     }
     catch(err){
         res.status(401).send({err: err.message})
@@ -45,4 +45,4 @@ const getRecruiter = async(req, res)=>{
     }
 }
 
-module.exports =  {NewRecruiter, getRecruiter,getRecruiterid};
+module.exports =  {NewRecruiter, getRecruiter, getRecruiterId};

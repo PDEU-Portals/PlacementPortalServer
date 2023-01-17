@@ -4,49 +4,44 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const JobPosting = require('../models/JobPosting');
 const sendToken = require('../utils/jwtToken');
 const bcrypt = require('bcryptjs')
+const RecruiterController = require('./RecruiterController');
 
-const newJobPosting = async(req, res)=>{
-    const recruiter_id = getRecruiterid;
-    const {headline, job_type,job_description, Pref_branches, deadline, user_applied, dateOfPosting} = req.body;
-    try{
-        const job_posting = await JobPosting.create({recruiter_id, headline, job_type, job_description, Pref_branches, deadline, dateOfPosting, user_applied}, (err, result)=>{
-            res.status(200).send("Job Posted");
-            res.status(200).json(result);
+async function newJobPosting(req, res) {
+    const recruiterId = getRecruiterId;
+    const { headline, jobType, jobDescription, PrefBranches, deadline, userApplied, dateOfPosting } = req.body;
+    try {
+        const jobPosting = await JobPosting.create({ recruiterId, headline, jobType, jobDescription, PrefBranches, deadline, dateOfPosting, userApplied }, (err, result) => {
+            if (err) throw err;
         });
-        res.status(200).json(job_posting);
+        res.status(200).json(jobPosting);
 
     }
-    catch(err){
-        res.status(400).json({err: err.message});
+    catch (err) {
+        res.status(400).json({ err: err.message });
     }
 }
 
 //Getting Job id
-const job_id = (req,res)=>{
-    try{
-    const job_id = await (JobPosting.findOne({recruiter_id: Recruiter_id, headline: headline, dateOfPosting: dateOfPosting}))._id; //Can be used to parse in different queries for fetching apis
-    return job_id;
-}
-    catch(err){
-        res.status(400).json({err: err.message});
+async function jobId(req, res){
+    try {
+        const jobId = await(JobPosting.findOne({ recruiterId, headline, dateOfPosting }))._id; //Can be used to parse in different queries for fetching apis
+        if (!jobId) res.status(404).send({ err: "Cannot Find the Recruiter" });
+        return jobId;
+    }
+    catch (err) {
+        res.status(400).json({ err: err.message });
     }
 }
 
-const getJobPosting = async(req, res)=>{
-    const Recruiter_id = getRecruiterid;
-    const { headline, dateOfPosting  } = req.body;
-    try{
-        const job_id = await (JobPosting.findOne({recruiter_id: Recruiter_id, headline: headline, dateOfPosting: dateOfPosting}))._id; //Can be used to parse in different queries for fetching apis
-        const Job = await JobPosting.findOne({recruiter_id: Recruiter_id, headline: headline, dateOfPosting: dateOfPosting}, (err, result)=>{
-            res.status(200).json(result);
-        });
-        res.status(200).json(Job);
-       return res.status(200).json(job_id);
-    }
-    catch(err){
-        res.status(401).send({err: err.message})
-        // res.status(400).send({err: "Cannot Find the Recruiter"})
-    }
+async function getJobPosting(req, res){
+    const recruiterId = RecruiterController.getRecruiterId(req, res);
+    const { headline, dateOfPosting } = req.body;
+    const jobId = await (JobPosting.findOne({ recruiterId, headline, dateOfPosting }))._id; //Can be used to parse in different queries for fetching apis
+    const Job = await JobPosting.findOne({ recruiterId, headline, dateOfPosting }, (err, result) => {
+        if (err) throw err;
+        else return result;
+    });
+    return res.status(200).json({ jobId, Job });
 }
 
-module.exports= {newJobPosting, job_id, getJobPosting}
+module.exports = { newJobPosting, jobId, getJobPosting }
