@@ -93,7 +93,7 @@ const userSchema = new Schema({
         4) github link
         */
     },
-    cgpa: {
+    CGPA: {
         type: String,
     },
     workExperience: {
@@ -143,6 +143,18 @@ const userSchema = new Schema({
 //             approved : {type: Boolean},
 //             users_applied : [  {  user_id: {type:String}, dateofSubmission: {type: String}  }  ]
 // });
+const JobPost = new Schema({
+            recruiter_id : { type: String }, //To be referenced from Recruiter Schema
+            jobId : { type: String },
+            headline : {type: String},
+            jobType : {type: String},
+            jobDescription : {type: String},
+            PrefBranches : [{ type: String }], //Array of Strings
+            deadline : {type: Date},
+            dateOfPosting : {type: Date},
+            approved : {type: Boolean},
+            users_applied : [  {  user_id: {type:String}, dateOfSubmission: {type: String}  }  ]
+});
 
 
 // userSchema.pre("save", async function (next) {
@@ -168,5 +180,7 @@ const userSchema = new Schema({
 const User = mongoose.model('users', userSchema);
 // const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
 // const Jobposting = mongoose.model ('jobpost', JobPost);
+const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
+const JobPosting = mongoose.model ('jobPost', JobPost);
 
-module.exports = User,Recruiter, Jobposting;
+module.exports = User,Recruiter, JobPosting;

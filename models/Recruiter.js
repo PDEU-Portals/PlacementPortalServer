@@ -24,9 +24,9 @@ const RecruiterSchema = new Schema({
            }  ]//To be referenced from JobPost Model
 
     //The referenced JobPOst will contanin the deatils of all users who applued for the job
-    
+    jobsPosted: [  {   jobId : { type: String }   }  ]//To be referenced from JobPost Model
 });
 
 
-const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
-module.exports = User,Recruiter, Jobposting;
+const Recruiter = mongoose.model('recruiter', RecruiterSchema);
+module.exports = User,Recruiter, JobPosting;

@@ -25,7 +25,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         })    
         
         const token = jwt.sign(
-            {user_id: user._id, email},
+            {userId: user._id, email},
             SECRET_KEY,
             {
                 expiresIn: "1d"
@@ -63,7 +63,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     // sendToken(user, 200, res);
     if(user && (await bcrypt.compare(password, user.password))){
         const token = jwt.sign(
-            {user_id: user._id, email},
+            {userId: user._id, email},
             process.env.SECRET_KEY,
             {
                 expiresIn: "1d"
@@ -208,17 +208,17 @@ exports.socialMediaHandlesUpdater = catchAsyncErrors(async(req, res, next) => {
 const getUserId = (req, res) => {
     const {name, email} = req.body;
 
-    let user_id = User.findOne({name: name, email: email})._id;
-    return user_id;
+    let userId = User.findOne({name, email})._id;
+    return userId;
 }
 
 //Apply for Job From Users end
 const applyJobForUser = async(req, res) => {
-    const Recruiter_id = getRecruiterid;
-    let Job_id = getJobPosting;
-    let user_id = getUserId;
+    const recruiterId = getRecruiterId;
+    let jobId = getJobPosting;
+    let userId = getUserId;
     try{
-    const JobApplied = await JobPosting.UpdateMany({recruiter_id: Recruiter_id, job_id: Job_id}, {$push: {users_applied: {user_id: user_id, /*dateofSubmission : */}}}, {approved : false});
+    const JobApplied = await JobPosting.UpdateMany({recruiterId, jobId}, {$push: {usersApplied: {userId, /*dateofSubmission : */}}}, {approved : false});
     getJobsAppliedForUser;
     res.status(200).send("Job Successfully Applied");
     res.status(200).json(JobApplied);
@@ -232,11 +232,11 @@ catch(err){
 //Updating the User Profile on Getting Applied
 const getJobsAppliedForUser = async(req, res)=>{
     const {name, email} = req.body;
-    const recruiter_id = getRecruiter;
-    let job_id = getJobPosting;
-    let user_id = getUserId;
+    const recruiterId = getRecruiter;
+    let jobId = getJobPosting;
+    let userId = getUserId;
     try{
-        let updateUser = await User.UpdateOne({_id: user_id, name: name, email:email}, {$push: {jobs_applied : {recruiter_id: recruiter_id, job_id: job_id,/* date_Of_Submission */}}});
+        let updateUser = await User.UpdateOne({_id: userId, name: name, email:email}, {$push: {jobsApplied : {recruiterId, jobId,/* date_Of_Submission */}}});
         res.status(200).json(updateUser);   
     }catch(err){
         res.status(400).send({err: err.message});

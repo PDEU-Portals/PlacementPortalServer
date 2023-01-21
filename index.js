@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 require('dotenv').config()
 const app = require('./app')
 /*
@@ -7,7 +8,7 @@ const app = require('./app')
     3) express-fileupload
     4) cookie-parser
     5) nodemon
-*/ 
+*/
 
 app.use((req, res, next) => {
     res.header('Access-Control-ALlow-Origin', '*');
@@ -20,6 +21,14 @@ app.use((err, req, res, next) => {
     next();
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server started on PORT: ${process.env.PORT}`);
-});
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    },
+    (err) => {
+        if (err) throw err;
+        else app.listen(process.env.PORT, () => {
+            console.log(`Server started on PORT: ${process.env.PORT}`);
+        });
+    }
+);
