@@ -27,7 +27,7 @@ const questionSchema = mongoose.Schema(
 	}
 );
 
-export const Question = mongoose.models.Question || mongoose.model('Question', questionSchema);
+module.exports = mongoose.models.Question || mongoose.model('Question', questionSchema);
 
 function arrayLimit(val) {
 	return val.length === 4;

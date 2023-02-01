@@ -29,4 +29,4 @@ attemptSchema.virtual('responses', {
 	localField: '_id'
 });
 
-export const Attempt = mongoose.model('Attempt', attemptSchema);
+module.exports = mongoose.model('Attempt', attemptSchema);

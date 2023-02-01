@@ -48,7 +48,7 @@ const responseSchema = mongoose.Schema(
 
 //
 
-export const Response = mongoose.model('Response', responseSchema);
+module.exports = mongoose.model('Response', responseSchema);
 function arrayLimit(val) {
 	return val.length === 4;
 }

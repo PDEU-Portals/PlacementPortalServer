@@ -1,6 +1,5 @@
-require('dotenv').config()
-require('./config/db').connect()
 const express = require('express')
+require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 const morgan = require('morgan')
@@ -25,8 +24,11 @@ app.use(morgan('tiny'))
 
 //routes
 const user = require("./routes/userRoutes")
-
+const quiz = require('./routes/quiz')
+const question = require('./routes/question')
 //routes middleware
 app.use("/api/v1", user)
+app.use('/api/v1', quiz)
+app.use('/api/v1', question)
 
 module.exports = app

@@ -54,4 +54,4 @@ quizSchema.virtual('attemptsCount', {
 	count: true
 });
 
-export const Quiz = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema);
+module.exports = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema);
