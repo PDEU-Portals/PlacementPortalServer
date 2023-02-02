@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const profileSchems = mongoose.Schema(
+const profileSchema = mongoose.Schema(
 	{
 		userId: {
 			type: String,
@@ -17,4 +17,4 @@ const profileSchems = mongoose.Schema(
 	}
 );
 
-module.exports = mongoose.model('Profile', profileSchems);
+module.exports = mongoose.model('Profile', profileSchema);
