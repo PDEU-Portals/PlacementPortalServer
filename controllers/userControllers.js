@@ -1,44 +1,49 @@
 const ErrorHandler = require('../utils/errorhandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const {User, Recruiter, JobPosting } = require('../models/user');
+const { User, Recruiter, JobPosting } = require('../models/user'); // need to be changed
 const sendToken = require('../utils/jwtToken');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const { getRecruiterId } = require('../controllers/recruiterController');
+const { getJobPosting } = require('../controllers/jobPostingController');
 
 // Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     const { name, email, password } = req.body;
 
-    if(email.split("@")[1] == "sot.pdpu.ac.in"){
+    if (email.split("@")[1] == "sot.pdpu.ac.in") {
+        if (email.count("@") != 1 || email.count(".") != 4 || email.count(" ") != 0 || email.count("+") != 0 || email.count("-") != 0 || email.count("_") != 0) {
+            // email should be of format name.xabcyy@sot.pdpu.ac.in  .=4, @=1, _=0, +=0, -=0, space=0
+            const existingUser = await User.findOne({ email })
 
-        const existingUser = await User.findOne({email})
-
-        if(existingUser){
-            res.status(401).send("User already exists! Please proceed to login")
-        }
-
-        const encPass = await bcrypt.hash(password, 10)
-
-        const user = await User.create({
-            name,
-            email,
-            password: encPass
-        })    
-        
-        const token = jwt.sign(
-            {userId: user._id, email},
-            SECRET_KEY,
-            {
-                expiresIn: "1d"
+            if (existingUser) {
+                return res.status(401).send("User already exists! Please proceed to login")
             }
-        )
 
-        user.token = token
+            const encPass = await bcrypt.hash(password, 10)
 
-        user.password = undefined
+            const user = await User.create({
+                name,
+                email,
+                password: encPass
+            })
 
-        res.status(201).json(user)
+            const token = jwt.sign(
+                { userId: user._id, email },
+                SECRET_KEY,
+                {
+                    expiresIn: "1d"
+                }
+            )
+
+            user.token = token
+
+            user.password = undefined
+
+            return res.status(201).json(user)
+        }
+        else return next(new ErrorHandler('Please enter a valid PDEU email', 400))
     }
-    else{
+    else {
         return next(new ErrorHandler('Please enter PDEU email', 400))
     }
 }
@@ -52,7 +57,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Please enter email and password', 400))
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('password');
     if (!user) {
         return next(new ErrorHandler('Invalid Email or Password', 401))
     }
@@ -61,9 +66,9 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     //     return next(new ErrorHandler('Invalid Email or Password', 401))
     // }
     // sendToken(user, 200, res);
-    if(user && (await bcrypt.compare(password, user.password))){
+    if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
-            {userId: user._id, email},
+            { userId: user._id, email },
             process.env.SECRET_KEY,
             {
                 expiresIn: "1d"
@@ -71,51 +76,50 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
         )
 
         user.token = token
+        // can use delete user.password
         user.password = undefined
 
-        res.status(200).json(user)
+        return res.status(200).json(user)
     }
-    res.status(400).send("Email or password is incorrect")
+    return res.status(400).send("Email or password is incorrect")
 
 });
 
 //Update skills of user =>  /api/v1/skillsUpdate
-exports.skillsUpdater = catchAsyncErrors(async(req, res, next) => {
+exports.skillsUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const skills = req.body.skills;
     console.log(skills)
-    if (!skills)
-    {
+    if (!skills) {
         return next(new ErrorHandler(`Please enter skills!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email}, {skills: skills})
-    res.status(200).send(userAction)
+    const userAction = await User.findOneAndUpdate({ email: req.body.email }, { skills: skills })
+    return res.status(200).send(userAction)
 });
 
 //update projects of user => /api/v1/projectsUpdate
-exports.projectsUpdater = catchAsyncErrors(async(req, res, next) => {
+exports.projectsUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const projects = req.body.projects;
-    if (!projects)
-    {
+    if (!projects) {
         return next(new ErrorHandler(`Please enter projects!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email}, {projects: projects})
-    res.status(200).send(userAction) 
+    const userAction = await User.findOneAndUpdate({ email: req.body.email }, { projects: projects })
+    return res.status(200).send(userAction)
 });
 
 //Update socialMediaHandles of user  =>     /api/v1/socialMediaHandlesUpdate
-exports.socialMediaHandlesUpdater = catchAsyncErrors(async(req, res, next) => {
+exports.socialMediaHandlesUpdater = catchAsyncErrors(async (req, res, next) => {
     //console.log(req)//for testing
     const socialMediaHandles = req.body.socialMediaHandles;
-    if (!socialMediaHandles){
+    if (!socialMediaHandles) {
         return next(new ErrorHandler(`Please enter social media handles!`, 400))
     }
 
-    const userAction = await User.findOneAndUpdate({email: req.body.email}, {socialMediaHandles: socialMediaHandles})
-    res.status(200).send(userAction)    
+    const userAction = await User.findOneAndUpdate({ email: req.body.email }, { socialMediaHandles })
+    return res.status(200).send(userAction)
 })
 
 // const NewRecruiter = async(req, res)=>{
@@ -123,7 +127,7 @@ exports.socialMediaHandlesUpdater = catchAsyncErrors(async(req, res, next) => {
 //     try{
 //     const new_Recruiter = await Recruiter.create({Company_Name, Description, Website, Jobs_Posted}, (err, results)=>{
 //         res.status(200).json(result);
-        
+
 
 //     })
 //     res.status(200).json(new_Recruiter)
@@ -206,52 +210,83 @@ exports.socialMediaHandlesUpdater = catchAsyncErrors(async(req, res, next) => {
 
 //Getting userId
 const getUserId = (req, res) => {
-    const {name, email} = req.body;
+    const { name, email } = req.body;
 
-    let userId = User.findOne({name, email})._id;
+    let userId = User.findOne({ name, email })._id;
     return userId;
 }
 
 //Apply for Job From Users end
-const applyJobForUser = async(req, res) => {
+const applyJobForUser = async (req, res) => {
     const recruiterId = getRecruiterId;
     let jobId = getJobPosting;
     let userId = getUserId;
-    try{
-    const JobApplied = await JobPosting.UpdateMany({recruiterId, jobId}, {$push: {usersApplied: {userId, /*dateofSubmission : */}}}, {approved : false});
-    getJobsAppliedForUser;
-    res.status(200).send("Job Successfully Applied");
-    res.status(200).json(JobApplied);
+    try {
+
+        // IMPORTANT: need to check if job is still accepting applications
+        // need to check if job is still accepting applications 
+
+        // need to check if user has already applied for this job
+        const alreadyApplied = JobPosting.findOne({ recruiterId, jobId, usersApplied: { $elemMatch: { userId } } });
+        if (alreadyApplied) {
+            return res.status(400).send("You have already applied for this job");
+        }
+        const JobApplied = await JobPosting.UpdateMany({ recruiterId, jobId }, { $push: { usersApplied: { userId, /*dateofSubmission : */ } } }, { approved: false });
+        getJobsAppliedForUser;
+        return res.status(200).send("Job Successfully Applied");
+        // if another time res.json() then error will be thrown
+        // res.status(200).json(JobApplied);
     }
 
-catch(err){
-    res.status(300).send("Error Applying the Job");
-}
+    catch (err) {
+        return res.status(300).send("Error Applying the Job");
+    }
 }
 
 //Updating the User Profile on Getting Applied
-const getJobsAppliedForUser = async(req, res)=>{
-    const {name, email} = req.body;
-    const recruiterId = getRecruiter;
+const getJobsAppliedForUser = async (req, res) => {
+    const { name, email } = req.body;
+    const recruiterId = getRecruiterId;
     let jobId = getJobPosting;
-    let userId = getUserId;
-    try{
-        let updateUser = await User.UpdateOne({_id: userId, name: name, email:email}, {$push: {jobsApplied : {recruiterId, jobId,/* date_Of_Submission */}}});
-        res.status(200).json(updateUser);   
-    }catch(err){
-        res.status(400).send({err: err.message});
+    let userId = getUserId; // 
+    try {
+        let updateUser = await User.UpdateOne({ _id: userId, name: name, email: email }, { $push: { jobsApplied: { recruiterId, jobId,/* date_Of_Submission */ } } });
+        return res.status(200).json(updateUser);
+    } catch (err) {
+        return res.status(400).send({ err: err.message });
     }
 }
 
 //--> Projects CRUD
 // Projects getting 
-exports.getProjectsOfUser = async(req, res) => {
-
+exports.getProjectsOfUser = async (req, res) => {
+    const { name, email } = req.body;
+    try {
+        const user = User.findOne({email});
+        if(!user){
+            return res.status(400).send("User not found");
+        }
+        const projects = user.projects;
+        return res.status(200).json(projects);
+    } catch (err) {
+        return res.status(400).send({ err: err.message });
+    }
 }
 
 //Projects updating
-exports.postProjectsOfUser = async(req, res) => {
-
+exports.postProjectsOfUser = async (req, res) => {
+    const { name, email, projects } = req.body;
+    try {
+        const user = User.findOne({email});
+        if(!user){
+            return res.status(400).send("User not found");
+        }
+        user.projects = projects;
+        const updatedUser = await user.save();
+        return res.status(200).json(updatedUser);
+    } catch (err) {
+        return res.status(400).send({ err: err.message });
+    }
 }
 
-module.exports = {getUserId, applyJobForUser, getJobsAppliedForUser};
+module.exports = { getUserId, applyJobForUser, getJobsAppliedForUser };
