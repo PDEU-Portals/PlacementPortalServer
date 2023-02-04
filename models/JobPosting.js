@@ -35,6 +35,7 @@ const JobPost = new Schema({
 
 //
 
-const Jobposting = mongoose.model ('jobpost', JobPost);
+// const Jobposting = mongoose.model ('jobpost', JobPost);
 
-module.exports = Jobposting;
+// module.exports = Jobposting;
+module.exports = mongoose.model('Jobposting', JobPost)

@@ -177,10 +177,12 @@ const userSchema = new Schema({
 //     return await bcrypt.compare(enteredPassword, this.password);
 // }
 
-const User = mongoose.model('users', userSchema);
+// const User = mongoose.model('users', userSchema);
 // const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
 // const Jobposting = mongoose.model ('jobpost', JobPost);
 // const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
 // const JobPosting = mongoose.model ('jobPost', JobPost);
 
-module.exports = User,Recruiter, JobPosting;
+// module.exports = User,Recruiter, JobPosting;
+
+module.exports = mongoose.model('User', userSchema)
