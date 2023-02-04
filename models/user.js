@@ -62,12 +62,12 @@ const userSchema = new Schema({
     name : {type: String},
     email: {
         type: String,
-        // required: [true, 'Please enter your email'],
+        required: [true, 'Please enter your email'],
         unique: true,
     },
     password: {
         type: String,
-        // required: [true, 'Please enter your password'],
+        required: [true, 'Please enter your password'],
     },
     rollNo: {
         type: String,
@@ -83,7 +83,7 @@ const userSchema = new Schema({
             Name: "",
             Tech_Stack: "",
             TimeStamps: "",
-            GitHub_Link: "",
+            Link: "",
         }],
         /*
         array of objects

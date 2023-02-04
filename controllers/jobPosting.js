@@ -4,7 +4,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const JobPosting = require('../models/JobPosting');
 const sendToken = require('../utils/jwtToken');
 const bcrypt = require('bcryptjs')
-const RecruiterController = require('./RecruiterController');
+const RecruiterController = require('./recruiter');
 
 async function newJobPosting(req, res) {
     const recruiterId = getRecruiterId;
