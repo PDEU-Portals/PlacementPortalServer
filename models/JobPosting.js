@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const users = require('../models/user');
+const recruiter = require('../models/Recruiter');
 
 /*
     Defining the Schema Pattern for Job Applying portal 
@@ -9,7 +10,7 @@ const users = require('../models/user');
     JobPosted Schema
 
     Parameter   ----->>     Data Type
-    Rec_id                  String (To be Referenced from Recruiter Schema)
+    _id                  String (To be Referenced from Recruiter Schema)
     date_posted             Date
     user_applied            Array (Fields : 
         user_id,            String
@@ -20,7 +21,7 @@ const users = require('../models/user');
 */
 
 const JobPost = new Schema({
-    recruiter_id : { type: String }, //To be referenced from Recruiter Schema
+    recruiter_id : { type: Schema.Types.ObjectID, ref: 'recruiter._id'}, //To be referenced from Recruiter Schema
     job_id : { type: String },
     headline : {type: String},
     job_type : {type: String}, //Part-time/fulltime etc
@@ -29,9 +30,10 @@ const JobPost = new Schema({
     deadline : {type: Date},
     dateofPosting : {type: Date},
     approved : {type: Boolean},
-    users_applied : [  {  type: Schema.Types.ObjectID, ref: 'users' , dateofSubmission: {type: String}  }  ]
+    users_applied : [  {  type: Schema.Types.ObjectID, ref: 'users._id' , dateofSubmission: {type: Date}, approved: Boolean  }  ]
 });
 
+//
 
 const Jobposting = mongoose.model ('jobpost', JobPost);
 

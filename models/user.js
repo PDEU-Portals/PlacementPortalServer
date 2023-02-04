@@ -62,12 +62,12 @@ const userSchema = new Schema({
     name : {type: String},
     email: {
         type: String,
-        // required: [true, 'Please enter your email'],
+        required: [true, 'Please enter your email'],
         unique: true,
     },
     password: {
         type: String,
-        // required: [true, 'Please enter your password'],
+        required: [true, 'Please enter your password'],
     },
     rollNo: {
         type: String,
@@ -83,7 +83,7 @@ const userSchema = new Schema({
             Name: "",
             Tech_Stack: "",
             TimeStamps: "",
-            GitHub_Link: "",
+            Link: "",
         }],
         /*
         array of objects
@@ -143,18 +143,18 @@ const userSchema = new Schema({
 //             approved : {type: Boolean},
 //             users_applied : [  {  user_id: {type:String}, dateofSubmission: {type: String}  }  ]
 // });
-const JobPost = new Schema({
-            recruiter_id : { type: String }, //To be referenced from Recruiter Schema
-            jobId : { type: String },
-            headline : {type: String},
-            jobType : {type: String},
-            jobDescription : {type: String},
-            PrefBranches : [{ type: String }], //Array of Strings
-            deadline : {type: Date},
-            dateOfPosting : {type: Date},
-            approved : {type: Boolean},
-            users_applied : [  {  user_id: {type:String}, dateOfSubmission: {type: String}  }  ]
-});
+// const JobPost = new Schema({
+//             recruiter_id : { type: String }, //To be referenced from Recruiter Schema
+//             jobId : { type: String },
+//             headline : {type: String},
+//             jobType : {type: String},
+//             jobDescription : {type: String},
+//             PrefBranches : [{ type: String }], //Array of Strings
+//             deadline : {type: Date},
+//             dateOfPosting : {type: Date},
+//             approved : {type: Boolean},
+//             users_applied : [  {  user_id: {type:String}, dateOfSubmission: {type: String}  }  ]
+// });
 
 
 // userSchema.pre("save", async function (next) {
@@ -180,7 +180,7 @@ const JobPost = new Schema({
 const User = mongoose.model('users', userSchema);
 // const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
 // const Jobposting = mongoose.model ('jobpost', JobPost);
-const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
-const JobPosting = mongoose.model ('jobPost', JobPost);
+// const Recruiter = mongoose.model ('recruiter', RecruiterSchema);
+// const JobPosting = mongoose.model ('jobPost', JobPost);
 
 module.exports = User,Recruiter, JobPosting;

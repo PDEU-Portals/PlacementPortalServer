@@ -218,7 +218,12 @@ const applyJobForUser = async(req, res) => {
     let jobId = getJobPosting;
     let userId = getUserId;
     try{
-    const JobApplied = await JobPosting.UpdateMany({recruiterId, jobId}, {$push: {usersApplied: {userId, /*dateofSubmission : */}}}, {approved : false});
+      var date  = new Date();
+    let jobs = JobPosting.find(userId).forEach((job)=>{
+        {
+            $push : {userId}
+        }
+    })
     getJobsAppliedForUser;
     res.status(200).send("Job Successfully Applied");
     res.status(200).json(JobApplied);
@@ -231,12 +236,13 @@ catch(err){
 
 //Updating the User Profile on Getting Applied
 const getJobsAppliedForUser = async(req, res)=>{
-    const {name, email} = req.body;
+    const {email} = req.body;
     const recruiterId = getRecruiter;
     let jobId = getJobPosting;
     let userId = getUserId;
     try{
-        let updateUser = await User.UpdateOne({_id: userId, name: name, email:email}, {$push: {jobsApplied : {recruiterId, jobId,/* date_Of_Submission */}}});
+        // let insertJob = await User.
+        // let 
         res.status(200).json(updateUser);   
     }catch(err){
         res.status(400).send({err: err.message});

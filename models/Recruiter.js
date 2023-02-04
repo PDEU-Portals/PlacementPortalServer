@@ -21,10 +21,16 @@ const RecruiterSchema = new Schema({
 
     jobs_posted: [  {   type: Schema.Types.ObjectID,
                         ref: 'jobpost',
+                        users_applied: 
+                            {
+                            type: Schema.Types.ObjectID,
+                            ref: 'jobpost.users_applied'
+                            }
+                        
            }  ]//To be referenced from JobPost Model
 
     //The referenced JobPOst will contanin the deatils of all users who applued for the job
-    jobsPosted: [  {   jobId : { type: String }   }  ]//To be referenced from JobPost Model
+    // users_applied: [  {   jobId : { type: String }   }  ]//To be referenced from JobPost Model
 });
 
 
