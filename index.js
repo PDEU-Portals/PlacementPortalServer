@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 // importing routes
 const user = require('./routes/userRoutes');
 const internalRoutes = require('./routes/internalRoutes');
+const openRoutes = require('./routes/openRoutes');
 
 // regular middlewares
 app.use(express.json())
@@ -24,12 +25,13 @@ app.use(
         tempFileDir: "./tmp/",
         useTempFiles: true,
     })
-)
-// app.use(authenticateSession);
+);
 
-// using routes
-app.use('/api/v1', user);
-app.use('/api/v1/internal', internalRoutes);
+app.use((req, res, next) => {
+    res.header('Access-Control-ALlow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 app.use((err, req, res, next) => {
     console.log(err);
@@ -38,9 +40,20 @@ app.use((err, req, res, next) => {
 
 
 //logging
-app.use(morgan('tiny'))
+app.use(morgan('tiny'));
 
 
+
+// using routes
+app.use('/api/v1', user);
+app.use('/api/v1/internal', internalRoutes);
+app.use('/api/v1/profile', openRoutes);
+
+
+// after all routes
+app.get((req,res)=>{
+    res.status(404).json({message: "Page not found"});
+})
 /*
     Have installed following additional dependencies:
     1) Express-Handlebars
@@ -50,11 +63,6 @@ app.use(morgan('tiny'))
     5) nodemon
 */
 
-app.use((req, res, next) => {
-    res.header('Access-Control-ALlow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
 
 mongoose.set('strictQuery', true)
 mongoose.connect(process.env.MONGO_URI, {

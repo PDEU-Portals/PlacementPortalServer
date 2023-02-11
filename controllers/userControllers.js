@@ -41,11 +41,11 @@ exports.loginUser = async (req, res) => {
         return res.status(404).json({ "err": "User not found" });
     }
     if (bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ email, password: user.password }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ email, id: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         });
         res.cookie('token', token, {
-            maxAge: 1000*60*60*24,
+            maxAge: 1000 * 60 * 60 * 24,
             signed: true,
         })
         return res.sendStatus(200);
@@ -55,7 +55,51 @@ exports.loginUser = async (req, res) => {
     }
 }
 
+//Logout a user
 exports.logOutUser = async (req, res) => {
-    if(req.signedCookies["token"]) res.clearCookie("token");
+    if (req.signedCookies["token"]) res.clearCookie("token");
     return res.sendStatus(200);
+}
+
+// Get user details
+exports.getUser = async (req, res) => {
+    const id = req.body.id;
+    User.findById(id, (err, user) => {
+        if (err) return res.status(400).json({ message: "Something went wrong" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        return res.json(user);
+    });
+}
+
+// Update user details
+exports.updateProfile = async (req, res) => {
+    const id = req.body.id;
+    const { rollNo, dateOfBirth, skills, projects, SGPA, workExperience, publications, phoneNumber, socialMediaHandles } = req.body;
+    let myObj = {};
+    if (rollNo) myObj.rollNo = rollNo;
+    if (dateOfBirth) myObj.dateOfBirth = dateOfBirth;
+    if (skills) myObj.skills = skills;
+    if (projects) myObj.projects = projects;
+    if (SGPA && SGPA.length) myObj.SGPA = SGPA;
+    if (workExperience && workExperience.length) myObj.workExperience = workExperience;
+    if (publications && publications.length) myObj.publications = publications;
+    if (phoneNumber) myObj.phoneNumber = phoneNumber;
+    if (socialMediaHandles && socialMediaHandles.length) myObj.socialMediaHandles = socialMediaHandles;
+    User.findByIdAndUpdate(id, myObj, {
+        new: true,
+        select: '-_id -password'
+    }, (err, user) => {
+        if (err) return res.status(400).json({ message: "Something went wrong" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        /*
+        remove unnecessary fields;              Will need to think on this
+        user = JSON.parse(JSON.stringify(user));
+        Object.keys(user).forEach(key => {
+            if (Array.isArray(user[key]) && user[key].length === 0) delete user[key];
+            if (user[key] === undefined) delete user[key];
+        });
+        */
+        return res.status(200).json(user);
+    }
+    );
 }

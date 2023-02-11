@@ -1,27 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-function authenticateSession(req,res,next){
-    if(req.session.token){
-        const decoded = jwt.verify(req.session.token, process.env.JWT_SECRET)
-        if(decoded){
-            req.data = decoded;
-            next();
-        }
-        else{
-            res.session.destroy();
-            return res.sendStatus(401).redirect('/login');
-        }
+function authenticateToken(req,res,next){
+    if(req.signedCookies['token']){
+        const token = req.signedCookies['token'];
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if(err) {
+                res.clearCookie('token');
+                res.sendStatus(401);
+            }
+            else {
+                req.body.email = decoded.email;
+                req.body.id = decoded.id;
+                next();
+            }
+        });
     }
-    else {
-        return res.status(401).redirect('/login');
-    }
+    else res.sendStatus(401);
 }
 
-function loginAuth(req,res,next){
-    if(req.session.token){
-        res.redirect('/');
-    }
-    else next();
-}
-
-module.exports = {authenticateSession, loginAuth};
+module.exports = {authenticateToken};

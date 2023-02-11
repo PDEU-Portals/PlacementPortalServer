@@ -1,11 +1,18 @@
 const express = require('express')
-const {registerUser, loginUser, logOutUser, skillsUpdater, projectsUpdater, socialMediaHandlesUpdater, applyJobForUser, getProjectsOfUser, postProjectsOfUser} = require('../controllers/userControllers')
+const {registerUser, loginUser, logOutUser, updateProfile, getUser, skillsUpdater, projectsUpdater, socialMediaHandlesUpdater, applyJobForUser, getProjectsOfUser, postProjectsOfUser} = require('../controllers/userControllers')
 const router = express.Router()
-const {authenticateSession, loginAuth} = require('../middleware/auth')
+const {authenticateToken} = require('../middleware/auth')
 
+// create and save a new user
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/logout", logOutUser);
+
+// get information
+router.get("/getInfo", authenticateToken, getUser);
+
+// update a user by the id in the request
+router.patch("/updateProfile", authenticateToken, updateProfile);
+
 // router.put("/skillsUpdate", auth ,skillsUpdater);
 // router.put("/projectsUpdate", auth ,projectsUpdater);   //Will have to work on this
 // router.put("/socialMediaHandlesUpdate", auth ,socialMediaHandlesUpdater);
@@ -16,5 +23,8 @@ router.get("/logout", logOutUser);
 // router.post("/recruiter/regisrter", registerRecruiter);
 // router.post("/recruiter/login", loginRecruiter);
 // router.post("/recruiter/info", newRe)
+
+// logout
+router.get("/logout", logOutUser);
 
 module.exports = router;

@@ -1,9 +1,6 @@
-// const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const jobPost = require('../models/JobPosting');
-// const bcrypt = require('bcryptjs')
-// const jwt = require('jsonwebtoken')
+
 
 /*
     Add link to database in .env file after doing necessary stuff wrt MongoDB
@@ -16,13 +13,13 @@ const Schema = mongoose.Schema;
     Parameter   --->    Data Type defined in schema     --->     Reason
     Name                    String                               Because it's an individual's name
     RollNo                  String                               Based on our Roll Numbers
-    DOB                     String                               To give flexibility to users
+    DOB                     Date                                 Frontend will return Date object
     Skills                  array of strings                     I guess it would be better to have skills in the form of array of strings as it would make insertion and deletion easier
-    Projects                array of strings                     I guess it would be better to have projects in the form of array of strings as it would make insertion and deletion easier       
-    CGPA                    Number                               Because cgpa can be of float, double or int, but can't have alphabets in it
+    Projects                array of Objects                     Because we can have multiple projects and each project has multiple fields
+    SGPA                    Array of 8 Numbers                   Because SGPA can be of float, double or int, but can't have alphabets in it
     work experience         Number                               Because work experience can be of half a year, or of 2.5 years and so on
-    publications            array of strings                     Because we can add links to multiple publications
-    contacts                defined as shown in Schema           For convenience              
+    publications            array of Objects                     {Name: String, Link: String}
+    socialMediaHandles      Array of Objects                     {Name: String, Link: String}}              
 */
 /* 
     For making effective data read, normalization of the Database with 3 Schemas (UserSchema, RecruiterSchema, JobPostedSchema)
@@ -49,7 +46,7 @@ const Schema = mongoose.Schema;
     user_applied            Array (Fields : 
         user_id,            String
         Submission_date,    String
-        pproval             boolean
+        approval            boolean
         )
 
 */
@@ -59,7 +56,7 @@ const userSchema = new Schema({
     //     type: String,
     //     // required: [true, 'Please enter your name'],
     // },   --> userName is not NECESSARY!!!!
-    name : {type: String},
+    name: { type: String },
     email: {
         type: String,
         required: [true, 'Please enter your email'],
@@ -76,7 +73,7 @@ const userSchema = new Schema({
         type: String,
     },
     dateOfBirth: {
-        type: String,
+        type: Date,
     },
     skills: {
         type: [String],
@@ -88,42 +85,74 @@ const userSchema = new Schema({
             TimeStamps: "",
             Link: "",
         }],
-        /*
-        array of objects
-        1) name
-        2) tech stack
-        3) timestamps
-        4) github link
-        */
+    },
+    SGPA: {
+        type: [Object],
+        validate: [{
+            validator: function (v) {
+                return v.length <= 8;
+            },
+            message: 'SGPA can have a maximum of 8 semesters'
+        }]
     },
     CGPA: {
-        type: String,
+        type: Number,
+        get: function (value) {
+            return Math.round(value * 100) / 100;
+        },
     },
     workExperience: {
-        role: String,
-        description: String,
+        type: [{
+            CompanyName: String,
+            Designation: String,
+            StartDate: Date,
+            EndDate: Date,
+        }]
     },
     publications: {
-        type: [String],
+        type: [{
+            Name: String,
+            Link: String,
+        }], // format: {name: "", link: ""}
     },
-    phoneNumber: {type: Number},
+    phoneNumber: { type: Number },
     socialMediaHandles: {
-        type: [String],
+        type: [{
+            Name: String,
+            Link: String,
+        }],
     },
 
-    jobs_applied : [
+    jobs_applied: [
         {
             type: Schema.Types.ObjectID,
             // ref: 'jobPost'
-    //         recruiter_id: {type: String},
-    //         job_id : {type: String},
-    //         date_of_submission: {type: Date}
+            //         recruiter_id: {type: String},
+            //         job_id : {type: String},
+            //         date_of_submission: {type: Date}
         }
     ]
 });
 
+// will run before save and create
+userSchema.pre('save', function (next) {
+    if (this.SGPA.length) {
+        this.CGPA = this.SGPA.reduce((a, b) => a + b) / this.SGPA.length;
+    }
+    next();
+});
 
-
+// will run before update
+userSchema.pre('findOneAndUpdate', function (next) {
+    if (this._update.SGPA && this._update.SGPA.length) {
+        let CGPA = 0;
+        for (let i = 0; i < this._update.SGPA.length; i++) {
+            CGPA += Number(this._update.SGPA[i]);
+        }
+        this._update.CGPA = (CGPA / this._update.SGPA.length).toFixed(2);
+    }
+    next();
+});
 //Recruiter Schema
 // const RecruiterSchema = new Schema({
 //     CompanyName: { type: String },
@@ -164,7 +193,7 @@ const userSchema = new Schema({
 //     if (!this.isModified("password")) {
 //       next();
 //     }
-  
+
 //     this.password = await bcrypt.hash(this.password, 10);
 // });
 
