@@ -96,10 +96,7 @@ const userSchema = new Schema({
         }]
     },
     CGPA: {
-        type: Number,
-        get: function (value) {
-            return Math.round(value * 100) / 100;
-        },
+        type: Number
     },
     workExperience: {
         type: [{
