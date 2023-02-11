@@ -64,7 +64,7 @@ exports.logOutUser = async (req, res) => {
 // Get user details
 exports.getUser = async (req, res) => {
     const id = req.body.id;
-    User.findById(id, (err, user) => {
+    User.findById(id, '-_id -password -__v', (err, user) => {   // remove password and _id from response
         if (err) return res.status(400).json({ message: "Something went wrong" });
         if (!user) return res.status(404).json({ message: "User not found" });
         return res.json(user);
@@ -92,7 +92,7 @@ exports.updateProfile = async (req, res) => {
         if (err) return res.status(400).json({ message: "Something went wrong" });
         if (!user) return res.status(404).json({ message: "User not found" });
         /*
-        remove unnecessary fields;              Will need to think on this
+        remove unnecessary fields;              Will need to think on this by having conversation with frontend team
         user = JSON.parse(JSON.stringify(user));
         Object.keys(user).forEach(key => {
             if (Array.isArray(user[key]) && user[key].length === 0) delete user[key];
