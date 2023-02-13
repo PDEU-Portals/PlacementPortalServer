@@ -4,7 +4,9 @@ const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload'); 
 const morgan = require('morgan')
 const app = express();
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const cors = require("cors");
+app.use(cors());
 
 // const authenticateSession = require('./middleware/authenticateSession')
 
@@ -30,7 +32,9 @@ app.use(
 app.use((req, res, next) => {
     res.header('Access-Control-ALlow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+    // res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
 });
 
 app.use((err, req, res, next) => {
