@@ -1,10 +1,12 @@
 const express = require('express')
-const {registerUser, loginUser, logOutUser, updateProfile, getUser, skillsUpdater, projectsUpdater, socialMediaHandlesUpdater, applyJobForUser, getProjectsOfUser, postProjectsOfUser} = require('../controllers/userControllers')
+const {registerUser, loginUser, logOutUser, updateProfile, getUser, skillsUpdater, projectsUpdater, socialMediaHandlesUpdater, applyJobForUser, getProjectsOfUser, postProjectsOfUser, verifyEmail} = require('../controllers/userControllers')
 const router = express.Router()
 const {authenticateToken} = require('../middleware/auth')
 
 // create and save a new user
 router.post("/register", registerUser);
+
+//login
 router.post("/login", loginUser);
 
 // get information

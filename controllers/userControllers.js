@@ -17,7 +17,7 @@ exports.registerUser = async (req, res) => {
     }
     const existingUser = await User.findOne({ email })
     if (existingUser) {
-        return res.status(409).send("User already exists! Please proceed to login")
+        return res.status(409).json({message: "User already exists! Please proceed to login"})
     }
     const encPass = await bcrypt.hash(password, 10);
     const user = User.create({
@@ -40,19 +40,19 @@ exports.loginUser = async (req, res) => {
     if (!user) {
         return res.status(404).json({ "err": "User not found" });
     }
-    if (bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ email, id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1d"
-        });
-        res.cookie('token', token, {
-            maxAge: 1000 * 60 * 60 * 24,
-            signed: true,
-        })
-        return res.sendStatus(200);
+    // check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return res.status(401).json({ message: "Email or Password Incorrect" });
     }
-    else {
-        return res.status(401).json({ "err": "Email or Password Incorrect" });
-    }
+    const token = jwt.sign({ email, id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d"
+    });
+    res.cookie('token', token, {
+        maxAge: 1000 * 60 * 60 * 24,
+        signed: true,
+    });
+    return res.sendStatus(200);
 }
 
 //Logout a user

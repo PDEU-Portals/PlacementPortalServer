@@ -15,9 +15,9 @@ const Schema = mongoose.Schema;
     RollNo                  String                               Based on our Roll Numbers
     DOB                     Date                                 Frontend will return Date object
     Skills                  array of strings                     I guess it would be better to have skills in the form of array of strings as it would make insertion and deletion easier
-    Projects                array of Objects                     Because we can have multiple projects and each project has multiple fields
+    Projects                array of Objects                     { Name: "", TechStack: "", TimeStamps: "", Link: "",}
     SGPA                    Array of 8 Numbers                   Because SGPA can be of float, double or int, but can't have alphabets in it
-    work experience         Number                               Because work experience can be of half a year, or of 2.5 years and so on
+    work experience         Array of Objects                     {CompanyName: String, Designation: String, StartDate: Date, EndDate: Date,}
     publications            array of Objects                     {Name: String, Link: String}
     socialMediaHandles      Array of Objects                     {Name: String, Link: String}}              
 */
@@ -81,7 +81,7 @@ const userSchema = new Schema({
     projects: {
         type: [{
             Name: "",
-            Tech_Stack: "",
+            TechStack: "",
             TimeStamps: "",
             Link: "",
         }],
@@ -128,7 +128,11 @@ const userSchema = new Schema({
             //         job_id : {type: String},
             //         date_of_submission: {type: Date}
         }
-    ]
+    ],
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 });
 
 // will run before save and create
