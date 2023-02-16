@@ -17,11 +17,12 @@ exports.registerUser = async (req, res) => {
     if (existingUser) {
         return res.status(409).json({ message : "User already exists! Please proceed to login"})
     }
+    const username = email.split("@")[0].split(".").join("-");
     const encPass = await bcrypt.hash(password, 10);
     User.create({
         name,
         email,
-        username: email.split("@")[0],
+        username,
         password: encPass
     }, (err, user) => {
         if (err) {

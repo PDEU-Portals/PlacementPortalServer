@@ -5,3 +5,4 @@ temp.txt
 static/
 utils/
 models/token.js
+google.json
