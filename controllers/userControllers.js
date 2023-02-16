@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const validEmailRegex =/^[^@.+_-]+\.[^@.+_-]+@sot\.pdpu\.ac\.in$/;
 
 //Register a user
 exports.registerUser = async (req, res) => {
@@ -8,10 +9,7 @@ exports.registerUser = async (req, res) => {
     if (!name || !email || !password) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
-    if (email.split("@")[1] !== "sot.pdpu.ac.in") {
-        return res.status(400).json({ message: "Please enter a valid email" });
-    }
-    if (email.split("@").length != 2 || email.split(".").length != 5 || email.split(" ").length != 1 || email.split("+").length != 1 || email.split("-").length != 1 || email.split("_").length != 1) {
+    if (!validEmailRegex.test(email)) {
         // email should be of format name.xabcyy@sot.pdpu.ac.in  .=4, @=1, _=0, +=0, -=0, space=0
         return res.status(400).json({ message: "Please enter a valid email" });
     }
