@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-function authenticateToken(req,res,next){
+function checkAdmin(req,res,next){
     if(req.signedCookies['token']){
         const token = req.signedCookies['token'];
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_ADMIN_SECRET, (err, decoded) => {
             if(err) {
                 res.clearCookie('token');
                 res.sendStatus(401);
@@ -18,4 +18,4 @@ function authenticateToken(req,res,next){
     else res.sendStatus(401);
 }
 
-module.exports = {authenticateToken};
+module.exports = { checkAdmin };

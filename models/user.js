@@ -97,6 +97,14 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isEligibleForPlacement: {
+        type: Boolean,
+        default: true
+    },
+    accountAccess: {
+        type: Boolean,
+        default: true
+    },
     quiz: [
         {
             type: mongoose.Schema.ObjectId,

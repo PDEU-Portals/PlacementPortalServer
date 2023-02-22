@@ -1,5 +1,27 @@
 const mongoose = require("mongoose");
 
+/**
+ * Job Schema
+ * 
+ * Attributes:             Datatype
+ * title                    String
+ * description              String
+ * jobType                  String
+ * openings                 Number  Total Number of Openings for the Job
+ * pref_branches            Array   Array of Strings containing the preferred branches
+ * jobCreationDate          Date    Date on which the job was created
+ * applicationDeadline      Date    Date on which the application for the job closes
+ * location                 Array   Array of Strings containing the location of the job
+ * salaryRange              Array   Array of Numbers containing the salary range of the job
+ * skills                   Array   Array of Strings containing the skills required for the job
+ * recruiterId              String  Id of the recruiter who created the job
+ * applicants               Array   Array of Strings containing the ids of the applicants for the job
+ * approved                 Boolean Whether the job has been approved by the admin or not
+ * acceptingResponses       Boolean Whether the job is accepting responses or not
+ * selectedApplicants       Array   Array of Strings containing the ids of the selected applicants for the job
+ * 
+ */
+
 const jobSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -46,7 +68,7 @@ const jobSchema = new mongoose.Schema({
             ref: "User"
         }
     ],
-    approved : {
+    approved : {   // Whether the job has been approved by the admin or not
         type: Boolean,
         default: false
     },
