@@ -18,7 +18,11 @@ const recruiterSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Job'
             }
-        }]
+        }],
+    isCurrentRecruiter:{
+        type: Boolean,
+        default: true,
+    }
     // selected applicants is available in Job Schema
     // details can be fetched using populate() method
 });

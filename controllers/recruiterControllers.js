@@ -16,7 +16,8 @@ exports.loginRecruiter = async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
-        const token = jwt.sign({ email, id: recruiter._id }, process.env.JWT_SECRET, {
+        if(recruiter.isCurrentRecruiter === false) return res.status(401).json({ message: "You are not a allowed to access the portal. Contact Admin" });
+        const token = jwt.sign({ email, id: recruiter._id }, process.env.JWT_RECRUITER_SECRET, {
             expiresIn: "1d"
         });
         res.cookie('token', token, {
@@ -37,7 +38,7 @@ exports.logOutRecruiter = async (req, res) => {
 // apply middleware authenticate token
 exports.getRecruiter = async (req, res) => {
     const id = req.body.id;
-    Recruiter.findById(id, '-_id -password -__v', (err, recruiter) => {   // remove password and _id from response
+    Recruiter.findById(id, '-password -__v', (err, recruiter) => {   // remove password and _id from response
         if (err) return res.status(400).json({ message: "Something went wrong" });
         if (!recruiter) return res.status(404).json({ message: "Recruiter not found" });
         return res.json(recruiter);
@@ -75,6 +76,17 @@ exports.getJobs = async (req, res) => { // get all jobs by recruiter
         const jobs = await Job.find({ recruiterId: recruiterId }, '-_id -__v').sort({ jobCreationDate: -1 });
         return res.status(200).json({ jobs });
     } catch (err) {
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+exports.getJob = async (req, res) => { // get a job by recruiter
+    const jobId = req.body.jobId;
+    try {
+        const job = await JSON.findById(jobId, '-__v');
+        if(!job) return res.status(404).json({ message: "Job not found" });
+        return res.status(200).json({ job });
+    } catch(err){
         return res.status(500).json({ message: "Something went wrong" });
     }
 }

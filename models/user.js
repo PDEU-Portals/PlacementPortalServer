@@ -96,6 +96,14 @@ const userSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    isEligibleForPlacement: {
+        type: Boolean,
+        default: true
+    },
+    accountAccess: {
+        type: Boolean,
+        default: true
     }
 });
 

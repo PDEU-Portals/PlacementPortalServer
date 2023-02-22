@@ -17,13 +17,14 @@ app.use(cors({
 const user = require("./routes/userRoutes")
 const internalRoutes = require("./routes/internalRoutes")
 const openRoutes = require("./routes/openRoutes")
+const recruiterRoutes = require("./routes/recruiterRoutes");
 
 // regular middlewares
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 
 //cookie and file middlewares
-app.use(cookieParser(process.env.COOKIE_SECRET, {signed: true}))
+app.use(cookieParser(process.env.COOKIE_SECRET, { signed: true }))
 app.use(
   fileUpload({
     tempFileDir: "./tmp/",
@@ -54,10 +55,11 @@ app.use(morgan("tiny"))
 app.use("/api/v1", user)
 app.use("/api/v1/internal", internalRoutes)
 app.use("/api/v1/profile", openRoutes)
+app.use("/api/v1/recruiter", recruiterRoutes)
 
 // after all routes
 app.get((req, res) => {
-  res.status(404).json({message: "Page not found"})
+  res.status(404).json({ message: "Page not found" })
 })
 /*
     Have installed following additional dependencies:
@@ -67,6 +69,10 @@ app.get((req, res) => {
     4) cookie-parser
     5) nodemon
 */
+
+function notFound(req, res) { res.status(404).json({ message: "Page not found" });}
+// If no route is matched by now, it must be a 404
+app.get(notFound).post(notFound).put(notFound).patch(notFound).delete(notFound);
 
 mongoose.set("strictQuery", true)
 mongoose.connect(
