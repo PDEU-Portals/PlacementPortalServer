@@ -17,6 +17,7 @@ app.use(cors({
 const user = require("./routes/userRoutes")
 const internalRoutes = require("./routes/internalRoutes")
 const openRoutes = require("./routes/openRoutes")
+const quizRoutes = require('./routes/quizRoutes')
 
 // regular middlewares
 app.use(express.json())
@@ -54,6 +55,7 @@ app.use(morgan("tiny"))
 app.use("/api/v1", user)
 app.use("/api/v1/internal", internalRoutes)
 app.use("/api/v1/profile", openRoutes)
+app.use("/api/v1/quiz", quizRoutes)
 
 // after all routes
 app.get((req, res) => {

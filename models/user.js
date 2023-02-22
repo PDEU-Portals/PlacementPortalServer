@@ -96,7 +96,13 @@ const userSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    quiz: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Quiz'
+        },
+    ]
 });
 
 // will run before save and create

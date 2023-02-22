@@ -13,10 +13,6 @@ const questionSchema = new mongoose.Schema({
 })
 
 const quizSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
     questions:{
         type: [questionSchema],
         required: true
