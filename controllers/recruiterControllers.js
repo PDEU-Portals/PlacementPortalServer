@@ -1,6 +1,6 @@
 // all functions in the file are only for recruiter
 // other job related functions for students(user) will be introduced in other file
-const Recruiter = require("../models/Recruiter");
+const Recruiter = require('../models/recruiter')
 const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");

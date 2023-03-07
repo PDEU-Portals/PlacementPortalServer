@@ -72,9 +72,9 @@ app.get((req, res) => {
     5) nodemon
 */
 
-function notFound(req, res) { res.status(404).json({ message: "Page not found" });}
-// If no route is matched by now, it must be a 404
-app.get(notFound).post(notFound).put(notFound).patch(notFound).delete(notFound);
+// function notFound(req, res) { res.status(404).json({ message: "Page not found" });}
+// // If no route is matched by now, it must be a 404
+// app.get(notFound).post(notFound).put(notFound).patch(notFound).delete(notFound);
 
 mongoose.set("strictQuery", true)
 mongoose.connect(
