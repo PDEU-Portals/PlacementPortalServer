@@ -19,7 +19,7 @@ const internalRoutes = require("./routes/internalRoutes")
 const openRoutes = require("./routes/openRoutes")
 const recruiterRoutes = require("./routes/recruiterRoutes");
 const quizRoutes = require('./routes/quizRoutes')
-const experience = require("./models/experience")
+const experience = require("./routes/experience")
 
 // regular middlewares
 app.use(express.json())
@@ -59,7 +59,7 @@ app.use("/api/v1/internal", internalRoutes)
 app.use("/api/v1/profile", openRoutes)
 app.use("/api/v1/recruiter", recruiterRoutes)
 app.use("/api/v1/quiz", quizRoutes)
-app.use("/api/v1", experience)
+app.use("/api/v1/experience", experience)
 
 // after all routes
 app.get((req, res) => {

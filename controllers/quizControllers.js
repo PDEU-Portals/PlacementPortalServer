@@ -21,7 +21,7 @@ exports.addQuestions = async(req,res) => {
 
 exports.createQuiz = async(req,res) => {
     try {
-        const questions = await Question.aggregate([{ $sample: { size: 10 } }]);
+        const questions = await Question.aggregate([{ $sample: { size: 2 } }]);
         res.status(200).send(questions)
     } catch (error) {
         console.log(error)

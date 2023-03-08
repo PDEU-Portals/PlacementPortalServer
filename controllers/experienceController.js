@@ -1,26 +1,29 @@
 const Experience = require('../models/experience')
 
-exports.addExperience = async(req,res) => {
+exports.getExperiences = async(req,res) => {
     try {
-        const id = req.params.id
-
-        const {title, description} = req.body
-
-        const data = await Experience.create({
-            title,
-            description
-        })
-
+        console.log('hit')
+        const data = await Experience.find({})
         res.status(200).json(data)
+
     } catch (error) {
         console.log(error)
     }
 }
 
-exports.getExperience = async(req,res) => {
+exports.addExperience = async(req,res) => {
     try {
-        const data = await Experience.find({}).sort({createdAt: -1})
+        
+        const {title, description} = req.body 
+
+        const data = await Experience.create({
+            title,
+            description,
+            // experience: req.user._id
+        })
+
         res.status(200).json(data)
+
     } catch (error) {
         console.log(error)
     }
