@@ -1,7 +1,7 @@
 const Recruiter = require("../models/Recruiter");
 const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
-
+const Admin = require("../models/Admin");
 
 exports.loginAdmin = async (req, res) => {
     const { email, password } = req.body;
@@ -9,15 +9,15 @@ exports.loginAdmin = async (req, res) => {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     try {
-        const recruiter = Recruiter.findOne({ email });
-        if (!recruiter) {
+        const admin = Admin.findOne({ email });
+        if (!admin) {
             return res.status(404).json({ message: "User does not exist" });
         }
-        const isMatch = bcrypt.compare(password, recruiter.password);
+        const isMatch = bcrypt.compare(password, admin.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
-        const token = jwt.sign({ id: recruiter._id }, process.env.JWT_SUPERADMIN_SECRET, {
+        const token = jwt.sign({ id: admin._id }, process.env.JWT_ADMIN_SECRET, {
             expiresIn: "1d",
         });
         res.cookie("token", token, {
@@ -30,7 +30,7 @@ exports.loginAdmin = async (req, res) => {
     }
 }
 
-exports.logOutRecruiter = async (req, res) => {
+exports.logOutAdmin = async (req, res) => {
     if (req.signedCookies["token"]) res.clearCookie("token");
     return res.sendStatus(200);
 }
@@ -120,12 +120,32 @@ exports.enableUser = async (req,res)=>{
 
 exports.getAllJobs = async (req,res)=>{
     try{
-        const jobs = await Job.find({});
+        const jobs = await Job.find({}, {}, {sort: {jobCreationDate: -1}});
         if(!jobs){
             return res.status(404).json({message: "No Jobs Found"});
         }
         return res.status(200).json({jobs});
     }catch(err){
+        return res.status(500).json({message: "Something went Wrong"});
+    }
+}
+
+exports.getJobsByYear = async (req, res)=>{
+    try{
+        const jobCreationDate = req.body.jobCreationDate;
+        if(!jobCreationDate) return res.status(404).json({msg: "Jobs not Found for the current Date"});
+        const year = jobCreationDate.getFullYear();
+        Job.aggregate([
+            {
+              $match: {
+                $expr: {
+                  $eq: [{ $year: "$dateField" }, year]
+                }
+              }
+            }
+          ])
+    } catch(err){
+        console.log(err);
         return res.status(500).json({message: "Something went Wrong"});
     }
 }
