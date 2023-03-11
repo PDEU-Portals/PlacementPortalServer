@@ -1,7 +1,8 @@
 const User = require('../models/User');
+const Job = require('../models/Job');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const validEmailRegex =/^[^@.+_-]+\.[^@.+_-]+@sot\.pdpu\.ac\.in$/;
+const validEmailRegex = /^[^@.+_-]+\.[^@.+_-]+@sot\.pdpu\.ac\.in$/;
 
 //Register a user
 exports.registerUser = async (req, res) => {
@@ -15,7 +16,7 @@ exports.registerUser = async (req, res) => {
     }
     const existingUser = await User.findOne({ email })
     if (existingUser) {
-        return res.status(409).json({ message : "User already exists! Please proceed to login"})
+        return res.status(409).json({ message: "User already exists! Please proceed to login" })
     }
     const username = email.split("@")[0].split(".").join("-");
     const encPass = await bcrypt.hash(password, 10);
@@ -37,7 +38,7 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-        return res.status(404).json({ message : "User not found" });
+        return res.status(404).json({ message: "User not found" });
     }
     // check password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -101,4 +102,88 @@ exports.updateProfile = async (req, res) => {
         return res.status(200).json(user);
     }
     );
+}
+
+exports.getJobs = async (req, res) => {
+    const id = req.body.id;
+    let appliedJobs = await User.findById(id, "appliedJobs");
+    if (!appliedJobs) appliedJobs = [];
+    const jobs = await Job.find({
+         _id: { $nin: appliedJobs } 
+        }, "-_id -__v -recruiterId -applicants -approved -selectedApplicants", { 
+            sort: { 
+                acceptingResponses: -1, 
+                jobCreationDate: 1 
+            }
+        });
+    return res.status(200).json(jobs);
+}
+
+exports.applyJob = async (req, res) => {
+    const id = req.body.id;
+    const jobId = req.body.jobId;
+    const job = Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    if (job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
+    const user = User.findById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const appliedJobs = user.appliedJobs;
+    if (appliedJobs.includes(jobId)) return res.status(409).json({ message: "You have already applied for this job" });
+    appliedJobs.push(jobId);
+    User.findByIdAndUpdate(id, { appliedJobs }, {
+        new: true,
+        select: '-_id -password'
+    }, (err, user) => {
+        if (err) return res.status(400).json({ message: "Something went wrong" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const applicants = job.applicants;
+        applicants.push(id);
+        Job.findByIdAndUpdate(jobId, { applicants }, {
+            new: true,
+            select: '-_id -__v'
+        }, (err, job) => {
+            if (err) return res.status(400).json({ message: "Something went wrong" });
+            if (!job) return res.status(404).json({ message: "Job not found" });
+            return res.status(200).json({ msg: "Applied for job successfully" });
+        });
+    });
+}
+
+exports.getAppliedJobs = async (req, res) => {
+    const id = req.body.id;
+    const appliedJobs = await User.findById(id, "appliedJobs");
+    if (!appliedJobs) return res.status(404).json({ message: "User not found" });
+    const jobs = await Job.find({ _id: { $in: appliedJobs } }, "-_id -__v");
+    return res.status(200).json(jobs);
+}
+
+exports.withdrawJobApplication = async (req, res) => {
+    const id = req.body.id;
+    const jobId = req.body.jobId;
+    const user = User.findById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const appliedJobs = user.appliedJobs;
+    if (!appliedJobs.includes(jobId)) return res.status(409).json({ message: "You have not applied for this job" });
+    appliedJobs.splice(appliedJobs.indexOf(jobId), 1);
+    const job = Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    const applicants = job.applicants;
+    if(!job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
+    if (!applicants.includes(id)) return res.status(409).json({ message: "You have not applied for this job" });
+    const updatedAppliedJobs = user.appliedJobs.filter(job => job !== jobId);
+    User.findByIdAndUpdate(id, { updatedAppliedJobs }, {
+        new: true,
+        select: '-_id -password'
+    }, (err, user) => {
+        if (err) return res.status(400).json({ message: "Something went wrong" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        Job.findByIdAndUpdate(jobId, { applicants: applicants.filter(applicant => applicant !== id) }, {
+            new: true,
+            select: '-_id -__v'
+        }, (err, job) => {
+            if (err) return res.status(400).json({ message: "Something went wrong" });
+            if (!job) return res.status(404).json({ message: "Job not found" });
+            return res.status(200).json({ msg: "Withdrawn application successfully" });
+        });
+    });
 }
