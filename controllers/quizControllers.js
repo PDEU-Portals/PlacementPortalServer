@@ -1,6 +1,4 @@
-const express = require('express')
-const {Question} = require('../models/quiz')
-const {Quiz} = require('../models/quiz')
+const {Question, Quiz} = require('../models/Quiz');
 
 exports.addQuestions = async(req,res) => {
     try {

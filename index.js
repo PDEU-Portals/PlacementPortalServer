@@ -74,7 +74,11 @@ app.get((req, res) => {
 
 function notFound(req, res) { res.status(404).json({ message: "Page not found" });}
 // If no route is matched by now, it must be a 404
-app.get(notFound).post(notFound).put(notFound).patch(notFound).delete(notFound);
+app.get(notFound);
+app.post(notFound);
+app.put(notFound);
+app.patch(notFound);
+app.delete(notFound);
 
 mongoose.set("strictQuery", true)
 mongoose.connect(

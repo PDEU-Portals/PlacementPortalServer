@@ -3,7 +3,7 @@ This file contains controllers of data available to all profiles, i.e. open to a
 */
 
 const express = require("express");
-const User = require("../models/user");
+const User = require("../models/User");
 
 // get all users
 exports.getProfile = async (req, res) => {

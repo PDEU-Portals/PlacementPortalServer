@@ -54,17 +54,29 @@ const jobSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Please enter a deadline"],
     },
-    location: Array[String],
-    salaryRange: [Number],
-    skills: Array[String],
+    location: [
+        {
+            type: String
+        }
+    ],
+    salaryRange: [
+        {
+            type: Number
+        }
+    ],
+    skills: [
+        {
+            type: String
+        }
+    ],
     recruiterId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Recruiter"
 
     },
     applicants:[
         {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }
     ],

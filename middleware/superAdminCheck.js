@@ -1,4 +1,4 @@
-const superAdmin = require('../models/superAdmin');
+const superAdmin = require('../models/SuperAdmin');
 const jwt = require('jsonwebtoken');
 
 exports.loginSuperAdmin = async(req, res) => {
