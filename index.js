@@ -20,6 +20,8 @@ const openRoutes = require("./routes/openRoutes")
 const recruiterRoutes = require("./routes/recruiterRoutes");
 const quizRoutes = require('./routes/quizRoutes')
 const experience = require("./routes/experience")
+const superAdmin = require("./routes/superAdminRoutes")
+const admin = require("./routes/adminRoutes")
 
 // regular middlewares
 app.use(express.json())
@@ -60,19 +62,13 @@ app.use("/api/v1/profile", openRoutes)
 app.use("/api/v1/recruiter", recruiterRoutes)
 app.use("/api/v1/quiz", quizRoutes)
 app.use("/api/v1/experience", experience)
+app.use("/api/v1/supadmin", superAdmin)
+app.use("/api/v1/admin", admin)
 
 // after all routes
 app.get((req, res) => {
   res.status(404).json({ message: "Page not found" })
 })
-/*
-    Have installed following additional dependencies:
-    1) Express-Handlebars
-    2) morgan
-    3) express-fileupload
-    4) cookie-parser
-    5) nodemon
-*/
 
 // function notFound(req, res) { res.status(404).json({ message: "Page not found" });}
 // // If no route is matched by now, it must be a 404

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {loginRecruiter, logOutRecruiter, getRecruiter, createJob, getJobs, getJob, addSelectedApplicant, deleteJob, modifyJob, removeSelectedApplicant} = require("../controllers/recruiterControllers");
+const {loginRecruiter, logOutRecruiter, getRecruiter, createJob, getJobs, getJob, addSelectedApplicant, deleteJob, modifyJob, removeSelectedApplicant, addDetails} = require("../controllers/recruiterControllers");
 
 const {recruiterCheck} = require("../middleware/recruiterCheck");
 
@@ -19,6 +19,8 @@ router.post("/createJob", createJob);
 router.patch("/addSelectedApplicant", addSelectedApplicant);
 router.patch("/removeSelectedApplicant", removeSelectedApplicant);
 router.patch("/modifyJob", modifyJob);
+
+router.put("/addDetails", addDetails)
 
 router.delete("/deleteJob", deleteJob);
 

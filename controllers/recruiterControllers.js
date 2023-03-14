@@ -4,6 +4,7 @@ const Recruiter = require('../models/recruiter')
 const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const recruiter = require('../models/recruiter');
 
 exports.loginRecruiter = async (req, res) => {
     const { email, password } = req.body;
@@ -12,7 +13,8 @@ exports.loginRecruiter = async (req, res) => {
         if (!recruiter) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
-        const isMatch = bcrypt.compare(password, recruiter.password);
+        // const isMatch = bcrypt.compare(password, recruiter.password);
+        const isMatch = password === recruiter.password
         if (!isMatch) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
@@ -24,15 +26,40 @@ exports.loginRecruiter = async (req, res) => {
             maxAge: 1000 * 60 * 60 * 24,
             signed: true,
         });
-        return res.sendStatus(200);
+        // return res.sendStatus(200);
+        return res.status(200).json({
+            recruiter,
+            token
+        })
     } catch (err) {
-        return res.status(500).json({ message: "Something went wrong" });
+        return res.status(500).json({ message: "Something went wrong", err: err.message });
     }
 }
 
 exports.logOutRecruiter = async (req, res) => {
     if (req.signedCookies["token"]) res.clearCookie("token");
     return res.sendStatus(200);
+}
+
+exports.addDetails = async(req,res) => {
+    const id = req.params.id;
+    const { companyName, companyDescription, companyWebsite, companyLinkedin, companyTwitter, additionalInfo} = req.body;
+    let myObj = {};
+    if (companyName) myObj.companyName = companyName;
+    if (companyDescription) myObj.companyDescription = companyDescription;
+    if (companyWebsite) myObj.companyWebsite = companyWebsite;
+    if (companyLinkedin) myObj.companyLinkedin = companyLinkedin;
+    if (companyTwitter) myObj.companyTwitter = companyTwitter;
+    if (additionalInfo) myObj.additionalInfo = additionalInfo;
+    Recruiter.findByIdAndUpdate(id, myObj, {
+        new: true,
+        select: '-_id -password'
+    }, (err, recruiter) => {
+        if (err) return res.status(400).json({ message: "Something went wrong" });
+        if (!recruiter) return res.status(404).json({ message: "User not found" });
+        return res.status(200).json(recruiter);
+    }
+    );
 }
 
 // apply middleware authenticate token

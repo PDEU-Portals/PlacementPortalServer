@@ -38,6 +38,39 @@ exports.loginSuperAdmin = async (req, res) => {
     }
 }
 
+exports.registerSuperAdmin = async(req,res) => {
+    const{email,password} = req.body 
+    try{
+        const superAdmin = await SuperAdmin.create({
+            email,
+            password
+        });
+        // if(!superAdmin){
+        //     return res.status(404).json({
+        //         message: 'Admin not found'
+        //     });
+        // }
+        // const isMatch = await bcrypt.compare(password, superAdmin.password);
+        // if(!isMatch){
+        //     return res.status(400).json({
+        //         message: 'Invalid credentials'
+        //     });
+        // }
+        const token = jwt.sign({id: superAdmin._id}, process.env.JWT_SUPERADMIN_SECRET);
+        res.cookie('token', token, {
+            maxAge: 1000 * 60 * 60 * 24,
+            signed: true
+        });
+        return res.status(200).json({
+            message: 'Login Successful',
+            token,
+            superAdmin
+        });
+    }catch(err){
+        return res.status(500).json({message: "Something went Wrong", err: err.message});
+    }
+}
+
 exports.logOutSuperAdmin = async (req, res) => {
     if (req.signedCookies["token"]) res.clearCookie("token");
     return res.sendStatus(200);

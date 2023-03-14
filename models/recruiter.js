@@ -13,6 +13,30 @@ const recruiterSchema = new mongoose.Schema({
     password:{
         type: String,
     },
+    companyName:{
+        type:String,
+        default:" "
+    },
+    companyDescription: {
+        type:String,
+        default:" "
+    },
+    companyWebsite: {
+        type:String,
+        default:" "
+    },
+    companyTwitter: {
+        type:String,
+        default:" "
+    },
+    companyLinkedin:{
+        type:String,
+        default:" "
+    },
+    additionalInfo: {
+        type:String,
+        default:" "
+    },
     jobs:[{
             jobId: {
                 type: mongoose.Schema.Types.ObjectId,

@@ -1,4 +1,4 @@
-const Recruiter = require("../models/Recruiter");
+const Recruiter = require('../models/recruiter')
 const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
@@ -45,13 +45,14 @@ exports.registerRecruiter = async (req, res) => {
         if (data) {
             return res.status(409).json({ message: "User already exists" });
         }
-        const encryptedPass = bcrypt.hash(password, 10);
-        await Recruiter.create({
+        // const encryptedPass = bcrypt.hash(password, 10);
+        const recruiter = await Recruiter.create({
             name,
             email,
+            // password: encryptedPass
             password: encryptedPass
         });
-        return res.sendStatus(200);
+        return res.status(200).json(recruiter);
     } catch (err) {
         console.log(err);
         return res.status(400).json({ message: "Something went wrong" });
