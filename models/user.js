@@ -110,6 +110,12 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'Quiz'
         },
+    ],
+    experience:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Experience'
+        }
     ]
 });
 

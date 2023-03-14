@@ -1,4 +1,4 @@
-const Recruiter = require('../models/Recruiter');
+const Recruiter = require('../models/recruiter');
 
 const recruiterCheck = async (req, res, next) => {
     Recruiter.findById(id, (err, recruiter) => {

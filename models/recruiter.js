@@ -27,4 +27,4 @@ const recruiterSchema = new mongoose.Schema({
     // details can be fetched using populate() method
 });
 
-module.exports = mongoose.model("Recruiter", recruiterSchema);
+module.exports = mongoose.model('Recruiter', recruiterSchema)
