@@ -42,7 +42,7 @@ exports.logOutRecruiter = async (req, res) => {
 }
 
 exports.addDetails = async(req,res) => {
-    const id = req.params.id;
+    const id = req.body.id;
     const { companyName, companyDescription, companyWebsite, companyLinkedin, companyTwitter, additionalInfo} = req.body;
     let myObj = {};
     if (companyName) myObj.companyName = companyName;
@@ -74,9 +74,9 @@ exports.getRecruiter = async (req, res) => {
 
 exports.createJob = async (req, res) => {
     const { title, description, jobType, openings, pref_branches, location, salaryRange, skills, applicationDeadline } = req.body;
-    if (!title || !description || !jobType || !openings || !pref_branches || !location || !salaryRange || !skills || applicationDeadline) {
-        return res.status(400).json({ message: "Please enter all fields" });
-    }
+    // if (!title || !description || !jobType || !openings || !pref_branches || !location || !salaryRange || !skills || applicationDeadline) {
+    //     return res.status(400).json({ message: "Please enter all fields" });
+    // }
     try {
         const job = await Job.create({
             title,
@@ -91,9 +91,9 @@ exports.createJob = async (req, res) => {
             recruiterId: req.body.id,
         });
         await Recruiter.findOneAndUpdate({ _id: req.body.id }, { $push: { jobs: job._id } })
-        return res.status(200).json({ message: "Job created successfully" });
+        return res.status(200).json({ message: "Job created successfully", job });
     } catch (err) {
-        return res.status(500).json({ message: "Something went wrong" });
+        return res.status(500).json({ message: "Something went wrong", err:err.message });
     }
 }
 

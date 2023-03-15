@@ -90,19 +90,19 @@ Inside the hook function, the application deadline is compared to the current da
 If the deadline has already passed, the acceptingResponses field is set to false.
 The next() function is called at the end to continue the save operation.
 */
-jobSchema.pre('save', function (next) {
-    // Check if the application deadline has passed
-    // Use this.getUpdate().$set.applicationDeadline || this.applicationDeadline
-    if (this.getUpdate().$set.applicationDeadline <= new Date()) {
-      this.acceptingResponses = false;
-    }
-    else{
-        this.acceptingResponses = true; 
-    }
-    if (this.getUpdate().$set.applicationDeadline <= new Date()) {
-        return next(new Error('Cannot update applicants after application deadline has passed'));
-      }
-    next();
-  });
+// jobSchema.pre('save', function (next) {
+//     // Check if the application deadline has passed
+//     // Use this.getUpdate().$set.applicationDeadline || this.applicationDeadline
+//     if (this.getUpdate().$set.applicationDeadline <= new Date()) {
+//       this.acceptingResponses = false;
+//     }
+//     else{
+//         this.acceptingResponses = true; 
+//     }
+//     if (this.getUpdate().$set.applicationDeadline <= new Date()) {
+//         return next(new Error('Cannot update applicants after application deadline has passed'));
+//       }
+//     next();
+//   });
 
 module.exports = mongoose.model("Job", jobSchema);
