@@ -7,15 +7,15 @@ const {loginRecruiter, logOutRecruiter, getRecruiter, createJob, getJobs, getJob
 const {recruiterCheck} = require("../middleware/recruiterCheck");
 
 router.post("/login", loginRecruiter);
-router.options("/addDetails", cors())
-router.put("/addDetails",addDetails)
+// router.options("/addDetails", cors())
+router.post("/addDetails",addDetails)
 
 // router.use(recruiterCheck);
 
 router.get("/logout", logOutRecruiter);
 router.get("/", getRecruiter);
 router.get("/getJobs", getJobs);
-router.get("/getJob", getJob);
+router.get("/getJob/:id", getJob);
 
 router.post("/createJob", createJob);
 

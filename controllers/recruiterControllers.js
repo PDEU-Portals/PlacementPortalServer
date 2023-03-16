@@ -97,22 +97,29 @@ exports.createJob = async (req, res) => {
     }
 }
 
-exports.getJobs = async (req, res) => { // get all jobs by recruiter
-    const recruiterId = req.body.id;
-    try {
-        const jobs = await Job.find({ recruiterId: recruiterId }, '-_id -__v').sort({ jobCreationDate: -1 });
-        return res.status(200).json({ jobs });
-    } catch (err) {
-        return res.status(500).json({ message: "Something went wrong" });
-    }
+exports.getJobs = async (req, res) => {
+    const id = req.params.id;
+    let appliedJobs = await Recruiter.findById(id, "appliedJobs");
+    if (!appliedJobs) appliedJobs = [];
+    const jobs = await Job.find({
+         _id: { $nin: appliedJobs } 
+        }, "-__v -recruiterId -applicants -approved -selectedApplicants", { 
+            sort: { 
+                acceptingResponses: -1, 
+                jobCreationDate: 1 
+            }
+        });
+    return res.status(200).json(jobs);
 }
 
 exports.getJob = async (req, res) => { // get a job by recruiter
-    const jobId = req.body.jobId;
+    const id = req.params.id;
+    console.log(id)
     try {
-        const job = await JSON.findById(jobId, '-__v');
+        console.log("hit")
+        const job = await JSON.findById(id, '-__v');
         if(!job) return res.status(404).json({ message: "Job not found" });
-        return res.status(200).json({ job });
+        return res.status(200).json(job);
     } catch(err){
         return res.status(500).json({ message: "Something went wrong" });
     }

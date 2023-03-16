@@ -124,7 +124,7 @@ exports.applyJob = async (req, res) => {
     const jobId = req.body.jobId;
     const job = Job.findById(jobId);
     if (!job) return res.status(404).json({ message: "Job not found" });
-    if (job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
+    if (!job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
     const user = User.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
     const appliedJobs = user.appliedJobs;
