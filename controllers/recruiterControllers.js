@@ -114,10 +114,10 @@ exports.getJobs = async (req, res) => {
 
 exports.getJob = async (req, res) => { // get a job by recruiter
     const id = req.params.id;
-    console.log(id)
+    // console.log(id)
     try {
-        console.log("hit")
-        const job = await JSON.findById(id, '-__v');
+        // console.log("hit")
+        const job = await Job.findById(id, '-__v');
         if(!job) return res.status(404).json({ message: "Job not found" });
         return res.status(200).json(job);
     } catch(err){

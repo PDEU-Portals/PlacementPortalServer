@@ -10,7 +10,7 @@ router.post("/login", loginRecruiter);
 // router.options("/addDetails", cors())
 router.post("/addDetails",addDetails)
 
-// router.use(recruiterCheck);
+router.use(recruiterCheck);
 
 router.get("/logout", logOutRecruiter);
 router.get("/", getRecruiter);

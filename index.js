@@ -22,6 +22,7 @@ const quizRoutes = require('./routes/quizRoutes')
 const experience = require("./routes/experience")
 const superAdmin = require("./routes/superAdminRoutes")
 const admin = require("./routes/adminRoutes")
+const upload = require("./routes/uploadRoutes")
 
 // regular middlewares
 app.use(express.json())
@@ -64,6 +65,7 @@ app.use("/api/v1/quiz", quizRoutes)
 app.use("/api/v1/experience", experience)
 app.use("/api/v1/supadmin", superAdmin)
 app.use("/api/v1/admin", admin)
+app.use("/api/v1/upload", upload)
 
 // after all routes
 app.get((req, res) => {

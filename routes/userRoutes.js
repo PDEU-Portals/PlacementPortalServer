@@ -13,7 +13,7 @@ router.post("/login", loginUser);
 router.get("/getInfo", authenticateToken, getUser);
 
 // update a user by the id in the request
-router.patch("/updateProfile", authenticateToken, updateProfile);
+router.post("/updateProfile", authenticateToken, updateProfile);
 
 // get all jobs
 router.get("/getJobs", authenticateToken, getJobs);
