@@ -14,9 +14,11 @@ router.get("/getInfo", authenticateToken, getUser);
 
 // update a user by the id in the request
 router.post("/updateProfile", authenticateToken, updateProfile);
+// router.post("/updateProfile", updateProfile);
 
 // get all jobs
-router.get("/getJobs", authenticateToken, getJobs);
+// router.get("/getJobs", authenticateToken, getJobs);
+router.get("/getJobs", getJobs);
 
 // apply for a Job
 router.post("/applyJob", authenticateToken, applyJob);

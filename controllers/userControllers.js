@@ -110,7 +110,7 @@ exports.getJobs = async (req, res) => {
     if (!appliedJobs) appliedJobs = [];
     const jobs = await Job.find({
          _id: { $nin: appliedJobs } 
-        }, "-_id -__v -recruiterId -applicants -approved -selectedApplicants", { 
+        }, " -__v -recruiterId -applicants -approved -selectedApplicants", { 
             sort: { 
                 acceptingResponses: -1, 
                 jobCreationDate: 1 
