@@ -54,6 +54,7 @@ const userSchema = new mongoose.Schema({
             Designation: String,
             StartDate: Date,
             EndDate: Date,
+            Description:String
         }]
     },
     publications: {
@@ -63,12 +64,12 @@ const userSchema = new mongoose.Schema({
         }], // format: {name: "", link: ""}
     },
     phoneNumber: { type: Number },
-    socialMediaHandles: {
-        type: [{
-            Name: String,
-            Link: String,
-        }],
-    },
+    socialMediaHandles:[
+        {
+            name:String,
+            link: String
+        }
+    ],
 
     jobs_applied: [
         {

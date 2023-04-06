@@ -36,6 +36,17 @@ exports.loginRecruiter = async (req, res) => {
     }
 }
 
+exports.getDetails = async(req,res) =>{
+    try {
+        const id = req.params.id;
+        const recruiter = await Recruiter.findById(id)
+        
+        res.status(200).json(recruiter)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 exports.logOutRecruiter = async (req, res) => {
     if (req.signedCookies["token"]) res.clearCookie("token");
     return res.sendStatus(200);
@@ -103,7 +114,7 @@ exports.getJobs = async (req, res) => {
     if (!appliedJobs) appliedJobs = [];
     const jobs = await Job.find({
          _id: { $nin: appliedJobs } 
-        }, "-__v -recruiterId -applicants -approved -selectedApplicants", { 
+        }, "-__v -applicants -approved -selectedApplicants", { 
             sort: { 
                 acceptingResponses: -1, 
                 jobCreationDate: 1 
