@@ -38,7 +38,7 @@ const jobSchema = new mongoose.Schema({
     },
     openings:{
         type: Number,
-        required: [true, "Please enter the number of openings"],
+        // required: [true, "Please enter the number of openings"],
         min: 1
     },
     pref_branches : [
@@ -52,7 +52,7 @@ const jobSchema = new mongoose.Schema({
     },
     applicationDeadline: {
         type: Date,
-        required: [true, "Please enter a deadline"],
+        // required: [true, "Please enter a deadline"],
     },
     location: [String],
     salaryRange: [Number],

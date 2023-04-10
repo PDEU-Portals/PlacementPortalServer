@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const validEmailRegex = /^[^@.+_-]+\.[^@.+_-]+@sot\.pdpu\.ac\.in$/;
 
+
 //Register a user
 exports.registerUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -31,6 +32,10 @@ exports.registerUser = async (req, res) => {
         }
         return res.sendStatus(200);
     });
+
+
+    //Redirecting to the Verification Link for after registering
+    res.redirect(`../verify-email`, 301);
 }
 
 //Login a user;  see if first get request can come
@@ -110,7 +115,7 @@ exports.getJobs = async (req, res) => {
     if (!appliedJobs) appliedJobs = [];
     const jobs = await Job.find({
          _id: { $nin: appliedJobs } 
-        }, "-_id -__v -recruiterId -applicants -approved -selectedApplicants", { 
+        }, " -__v -recruiterId -applicants -approved -selectedApplicants", { 
             sort: { 
                 acceptingResponses: -1, 
                 jobCreationDate: 1 
@@ -187,3 +192,24 @@ exports.withdrawJobApplication = async (req, res) => {
         });
     });
 }
+
+//Run the Flask route to generate the dynamic api for verification
+exports.generate_link = async(req, res)=>{
+    const response = await fetch('../generate_link',{
+        method: 'POST',
+        headers:{
+            "content-type": 'application/json'
+        },
+        body: JSON.stringify({ user_id: user_id }),
+    })
+    const data = await response.json();
+
+    if (response.ok) {
+      const link = data.link;
+      return link;
+    } else {
+      const error = data.error || "Unknown error";
+      throw new Error(`Failed to generate link: ${error}`);
+    }
+    
+  };
