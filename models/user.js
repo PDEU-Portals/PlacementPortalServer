@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -134,5 +135,6 @@ userSchema.pre('findOneAndUpdate', function (next) {
     }
     next();
 });
+
 
 module.exports = mongoose.model('User', userSchema)

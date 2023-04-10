@@ -1,7 +1,8 @@
 const express = require('express')
-const {registerUser, loginUser, logOutUser, updateProfile, getUser, getJobs, applyJob, getAppliedJobs, withdrawJobApplication} = require('../controllers/userControllers')
+const {registerUser, loginUser, logOutUser, updateProfile, getUser, getJobs, applyJob, getAppliedJobs, withdrawJobApplication, generate_link} = require('../controllers/userControllers')
 const router = express.Router()
 const {authenticateToken} = require('../middleware/auth')
+const redirectUser = require('../helpers/validsators');
 
 // create and save a new user
 router.post("/register", registerUser);
@@ -28,6 +29,10 @@ router.get("/getAppliedJobs", authenticateToken, getAppliedJobs);
 
 // withdraw job application
 router.post("/withdrawJobApplication", authenticateToken, withdrawJobApplication);
+
+router.post('/verify-email', redirectUser);
+
+router.post('/:user_id/verify-email/generate_link', generate_link);
 
 
 // logout
