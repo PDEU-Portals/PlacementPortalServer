@@ -122,18 +122,24 @@ exports.getJobs = async (req, res) => {
 exports.applyJob = async (req, res) => {
     const id = req.body.id;
     const jobId = req.body.jobId;
-    const job = Job.findById(jobId);
+    // console.log(id,jobId)
+    const job = await Job.findById(jobId);
+    // console.log(job.title);
     if (!job) return res.status(404).json({ message: "Job not found" });
     if (!job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
-    const user = User.findById(id);
+    const user = await User.findById(id);
+    // console.log(user);
     if (!user) return res.status(404).json({ message: "User not found" });
-    const appliedJobs = user.appliedJobs;
+    const appliedJobs = user.jobs_applied;
+    // console.log(appliedJobs);
     if (appliedJobs.includes(jobId)) return res.status(409).json({ message: "You have already applied for this job" });
     appliedJobs.push(jobId);
-    User.findByIdAndUpdate(id, { appliedJobs }, {
+    // console.log(appliedJobs);
+    User.findByIdAndUpdate(id, { jobs_applied:appliedJobs }, {
         new: true,
         select: '-_id -password'
     }, (err, user) => {
+        // console.log(user.jobs_applied);
         if (err) return res.status(400).json({ message: "Something went wrong" });
         if (!user) return res.status(404).json({ message: "User not found" });
         const applicants = job.applicants;
@@ -151,7 +157,9 @@ exports.applyJob = async (req, res) => {
 
 exports.getAppliedJobs = async (req, res) => {
     const id = req.body.id;
-    const appliedJobs = await User.findById(id, "appliedJobs");
+    // const appliedJobs = await User.findById(id, "jobs_applied");
+    const user = await User.findById(id)
+    const appliedJobs = user.jobs_applied
     if (!appliedJobs) return res.status(404).json({ message: "User not found" });
     const jobs = await Job.find({ _id: { $in: appliedJobs } }, "-_id -__v");
     return res.status(200).json(jobs);
@@ -171,7 +179,7 @@ exports.withdrawJobApplication = async (req, res) => {
     if(!job.acceptingResponses) return res.status(400).json({ message: "Deadline has passed" });
     if (!applicants.includes(id)) return res.status(409).json({ message: "You have not applied for this job" });
     const updatedAppliedJobs = user.appliedJobs.filter(job => job !== jobId);
-    User.findByIdAndUpdate(id, { updatedAppliedJobs }, {
+    User.findByIdAndUpdate(id, { jobs_applied:updatedAppliedJobs }, {
         new: true,
         select: '-_id -password'
     }, (err, user) => {

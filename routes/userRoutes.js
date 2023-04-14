@@ -25,7 +25,8 @@ router.get("/getJobs", getJobs);
 router.post("/applyJob", applyJob);
 
 // get all applied jobs
-router.get("/getAppliedJobs", authenticateToken, getAppliedJobs);
+// router.get("/getAppliedJobs", authenticateToken, getAppliedJobs);
+router.get("/getAppliedJobs", getAppliedJobs);
 
 // withdraw job application
 router.post("/withdrawJobApplication", authenticateToken, withdrawJobApplication);
