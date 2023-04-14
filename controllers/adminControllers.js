@@ -2,6 +2,7 @@ const Recruiter = require('../models/recruiter')
 const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
+const User = require('../models/User')
 
 exports.loginAdmin = async (req, res) => {
     const { email, password } = req.body;
@@ -157,7 +158,7 @@ exports.getAllUsers = async (req,res)=>{
         if(!users){
             return res.status(404).json({message: "No Users Found"});
         }
-        return res.status(200).json({users});
+        return res.status(200).json(users);
     }catch(err){
         return res.status(500).json({message: "Something went Wrong"});
     }
