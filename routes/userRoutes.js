@@ -21,7 +21,8 @@ router.post("/updateProfile", authenticateToken, updateProfile);
 router.get("/getJobs", getJobs);
 
 // apply for a Job
-router.post("/applyJob", authenticateToken, applyJob);
+// router.post("/applyJob", authenticateToken, applyJob);
+router.post("/applyJob", applyJob);
 
 // get all applied jobs
 router.get("/getAppliedJobs", authenticateToken, getAppliedJobs);

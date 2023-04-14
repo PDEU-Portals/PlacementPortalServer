@@ -10,6 +10,7 @@ exports.loginRecruiter = async (req, res) => {
     const { email, password } = req.body;
     try {
         const recruiter = await Recruiter.findOne({ email });
+        // console.log(recruiter)
         if (!recruiter) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
@@ -129,8 +130,9 @@ exports.getJob = async (req, res) => { // get a job by recruiter
     try {
         // console.log("hit")
         const job = await Job.findById(id, '-__v');
+        const recruiter = await Recruiter.findById(job.recruiterId)
         if(!job) return res.status(404).json({ message: "Job not found" });
-        return res.status(200).json(job);
+        return res.status(200).json({job,recruiter});
     } catch(err){
         return res.status(500).json({ message: "Something went wrong" });
     }
