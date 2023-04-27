@@ -52,7 +52,7 @@ exports.loginUser = async (req, res) => {
         maxAge: 1000 * 60 * 60 * 24,
         signed: true,
     });
-    return res.sendStatus(200);
+    return res.status(200).json({user:user, token:token});
 }
 
 //Logout a user
@@ -63,7 +63,7 @@ exports.logOutUser = async (req, res) => {
 
 // Get user details
 exports.getUser = async (req, res) => {
-    const id = req.body.id;
+    const id = req.params.id;
     User.findById(id, '-_id -password -__v', (err, user) => {   // remove password and _id from response
         if (err) return res.status(400).json({ message: "Something went wrong" });
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -74,7 +74,7 @@ exports.getUser = async (req, res) => {
 // Update user details
 exports.updateProfile = async (req, res) => {
     const id = req.body.id;
-    const { rollNo, dateOfBirth, skills, projects, SGPA, workExperience, publications, phoneNumber, socialMediaHandles } = req.body;
+    const { rollNo, dateOfBirth, skills, projects, SGPA, workExperience, publications, phoneNumber, socialMediaHandles, name, website, shortDescription, description,branch } = req.body;
     let myObj = {};
     if (rollNo) myObj.rollNo = rollNo;
     if (dateOfBirth) myObj.dateOfBirth = dateOfBirth;
@@ -84,6 +84,11 @@ exports.updateProfile = async (req, res) => {
     if (workExperience && workExperience.length) myObj.workExperience = workExperience;
     if (publications && publications.length) myObj.publications = publications;
     if (phoneNumber) myObj.phoneNumber = phoneNumber;
+    if(name) myObj.name = name
+    if(shortDescription) myObj.shortDescription = shortDescription
+    if(description) myObj.description = description
+    if(website) myObj.website = website
+    if(branch) myObj.branch = branch
     if (socialMediaHandles && socialMediaHandles.length) myObj.socialMediaHandles = socialMediaHandles;
     User.findByIdAndUpdate(id, myObj, {
         new: true,

@@ -10,11 +10,11 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // get information
-router.get("/getInfo", authenticateToken, getUser);
+router.get("/getInfo/:id", authenticateToken, getUser);
 
 // update a user by the id in the request
-router.post("/updateProfile", authenticateToken, updateProfile);
-// router.post("/updateProfile", updateProfile);
+// router.post("/updateProfile", authenticateToken, updateProfile);
+router.post("/updateProfile", updateProfile);
 
 // get all jobs
 // router.get("/getJobs", authenticateToken, getJobs);

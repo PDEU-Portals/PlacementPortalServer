@@ -113,7 +113,16 @@ const userSchema = new mongoose.Schema({
                 type:String
             }
         }
-    ]
+    ],
+    shortDescription:{
+        type:String
+    },
+    description: String,
+    website:{
+        type:String,
+        default: ""
+    },
+    branch: String
 });
 
 // will run before save and create
