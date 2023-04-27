@@ -165,17 +165,23 @@ exports.modifyJob = async (req, res) => {
 }
 
 exports.deleteJob = async (req, res) => {
-    const jobId = req.body.jobId;
+    const jobId = req.params.jobId;
     try {
-        await Job.findByIdAndDelete(jobId, (err, job) => {
-            if (err) throw err;
-            if (!job) return res.status(404).json({ message: "Job not found" });
-            const recruiterId = job.recruiterId;
-            Recruiter.findByIdAndUpdate(recruiterId, {
-                $pull: { jobs: jobId }
-            });
-        });
-        return res.status(200).json({ message: "Job deleted successfully" });
+        // await Job.findByIdAndDelete(jobId, (err, job) => {
+        //     if (err) throw err;
+        //     if (!job) return res.status(404).json({ message: "Job not found" });
+        //     const recruiterId = job.recruiterId;
+        //     Recruiter.findByIdAndUpdate(recruiterId, {
+        //         $pull: { jobs: jobId }
+        //     });
+        // });
+        const job = await Job.findByIdAndDelete(jobId)
+        if (!job) return res.status(404).json({ message: "Job not found" });
+        const recruiterId = job.recruiterId
+        await Recruiter.findByIdAndUpdate(recruiterId,{
+            $pull: {jobs: jobId}
+        })
+        res.status(200).json({ message: "Job deleted successfully" });
     } catch (err) {
         const message = err.message || "Something went wrong";
         return res.status(500).json({ message });

@@ -10,24 +10,18 @@ exports.loginAdmin = async (req, res) => {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     try {
-        const admin = Admin.findOne({ email });
-        if (!admin) {
-            return res.status(404).json({ message: "User does not exist" });
+        const admin = await Admin.findOne({email:email})
+        if(!admin){
+            return res.status(404).send('User not found')
         }
-        const isMatch = bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid credentials" });
+        let isMatch = await bcrypt.compare(password,admin.password)
+        if(!isMatch){
+            return res.status(401).send("Invalid Credentials")
         }
-        const token = jwt.sign({ id: admin._id }, process.env.JWT_ADMIN_SECRET, {
-            expiresIn: "1d",
-        });
-        res.cookie("token", token, {
-            maxAge: 1000 * 60 * 60 * 24,
-            signed: true,
-        });
-        return res.status(200).json({ message: "Login Successful" });
+
+        res.status(200).send("Logged in successful")
     }catch(err){
-        return res.status(500).json({message: "Something went wrong"});
+        return res.status(500).json({message: "Something went wrong",err});
     }
 }
 

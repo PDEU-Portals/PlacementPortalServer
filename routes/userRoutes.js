@@ -10,6 +10,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // get information
+// router.get("/getInfo/:id", getUser);
 router.get("/getInfo/:id", authenticateToken, getUser);
 
 // update a user by the id in the request

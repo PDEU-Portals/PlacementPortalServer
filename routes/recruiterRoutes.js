@@ -24,6 +24,6 @@ router.patch("/addSelectedApplicant", addSelectedApplicant);
 router.patch("/removeSelectedApplicant", removeSelectedApplicant);
 router.patch("/modifyJob", modifyJob);
 
-router.delete("/deleteJob", deleteJob);
+router.post("/deleteJob/:jobId", deleteJob);
 
 module.exports = router;
