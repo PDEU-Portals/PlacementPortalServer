@@ -5,6 +5,7 @@ const Job = require("../models/Job");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const recruiter = require('../models/recruiter');
+const User = require('../models/User');
 
 exports.loginRecruiter = async (req, res) => {
     const { email, password } = req.body;
@@ -250,7 +251,9 @@ exports.removeApplicant = async (req, res) => {
 exports.getSelectedApplicants = async(req,res) => {
     try {
         const id = req.params.id 
-        const job = await Job.findById(id)
+        const job = await Job.findById(id).populate('selectedApplicants')
+        // const selectedUsers = []
+        
         res.status(200).json(job.selectedApplicants)
     } catch (error) {
         console.error(error);
