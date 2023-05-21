@@ -50,11 +50,11 @@ const userSchema = new mongoose.Schema({
     },
     workExperience: {
         type: [{
-            CompanyName: String,
-            Designation: String,
-            StartDate: Date,
-            EndDate: Date,
-            Description:String
+            companyName: String,
+            designation: String,
+            startDate: Date,
+            endDate: Date,
+            description:String
         }]
     },
     publications: {

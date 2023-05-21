@@ -1,5 +1,5 @@
 const express = require('express')
-const {registerUser, loginUser, logOutUser, updateProfile, getUser, getJobs, applyJob, getAppliedJobs, withdrawJobApplication, addSkills} = require('../controllers/userControllers')
+const {registerUser, loginUser, logOutUser, updateProfile, getUser, getJobs, applyJob, getAppliedJobs, withdrawJobApplication, addSkills,deleteSkill,addWorkExperience} = require('../controllers/userControllers')
 const router = express.Router()
 const {authenticateToken} = require('../middleware/auth')
 
@@ -10,13 +10,16 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // get information
-// router.get("/getInfo/:id", getUser);
-router.get("/getInfo/:id", authenticateToken, getUser);
+router.get("/getInfo/:id", getUser);
+// router.get("/getInfo/:id", authenticateToken, getUser);
 
 // update a user by the id in the request
 // router.post("/updateProfile", authenticateToken, updateProfile);
 router.post("/updateProfile", updateProfile);
 router.post("/addskills/:id",addSkills)
+router.post("/deleteskills/:id",deleteSkill)
+
+router.post("/addWE/:id",addWorkExperience)
 
 // get all jobs
 // router.get("/getJobs", authenticateToken, getJobs);

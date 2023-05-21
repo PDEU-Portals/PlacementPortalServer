@@ -1,7 +1,7 @@
 const express =  require('express');
 const router = express.Router();
 
-const {registerRecruiter, disableRecruiter, enableRecruiter, disableUser, enableUser, getAllUsers, loginAdmin, logOutAdmin, getAllRecruiters} = require('../controllers/adminControllers');
+const {registerRecruiter, disableRecruiter, enableRecruiter, disableUser, enableUser, getAllUsers, loginAdmin, logOutAdmin, getAllRecruiters,getUser} = require('../controllers/adminControllers');
 
 router.post('/login',loginAdmin)
 router.post('/logout',logOutAdmin)
@@ -12,5 +12,6 @@ router.post('/disableUser', disableUser);
 router.post('/enableUser', enableUser);
 router.get('/getUsers', getAllUsers)
 router.get('/getRecruiters',getAllRecruiters)
+router.get('/getUser/:id',getUser)
 
 module.exports = router;

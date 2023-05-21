@@ -234,3 +234,13 @@ exports.rejectJob = async (req,res)=>{
         return res.status(500).json({message: "Something went Wrong"});
     }
 }
+
+exports.getUser = async(req,res) => {
+    try {
+        const id = req.params.id 
+        const user = await User.findById(id,'-password -__v')
+        res.status(200).json(user)
+    } catch (error) {
+        console.error(error);
+    }
+}

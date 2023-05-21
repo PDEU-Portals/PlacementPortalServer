@@ -81,7 +81,6 @@ exports.updateProfile = async (req, res) => {
     if (skills) myObj.skills = skills;
     if (projects) myObj.projects = projects;
     if (SGPA && SGPA.length) myObj.SGPA = SGPA;
-    if (workExperience && workExperience.length) myObj.workExperience = workExperience;
     if (publications && publications.length) myObj.publications = publications;
     if (phoneNumber) myObj.phoneNumber = phoneNumber;
     if(name) myObj.name = name
@@ -93,7 +92,6 @@ exports.updateProfile = async (req, res) => {
     if(github) myObj.github = github
     if(twitter) myObj.twitter = twitter
     if(linkedin) myObj.linkedin = linkedin
-    if (socialMediaHandles && socialMediaHandles.length) myObj.socialMediaHandles = socialMediaHandles;
     User.findByIdAndUpdate(id, myObj, {
         new: true,
         select: '-_id -password'
@@ -209,6 +207,7 @@ exports.addSkills = async(req,res) => {
     try {
         const id = req.params.id
         const {skills}  = req.body
+        console.log(skills);
         const user = await User.findByIdAndUpdate(id,
             {$push: {skills: skills}},
             {new: true}
@@ -218,6 +217,34 @@ exports.addSkills = async(req,res) => {
         //     {$push: {skills: skills}}
         // )
         res.status(200).json(user.skills)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+exports.deleteSkill = async(req,res) => {
+    try {
+        const id = req.params.id 
+        const {skill} = req.body 
+        const response = await User.findByIdAndUpdate(id,{
+            $pullAll:{skills: skill}},
+            {new:true}
+        )
+
+        res.status(200).json(response)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+exports.addWorkExperience = async(req,res) => {
+    try {
+        const id = req.params.id 
+        const {companyName,designation,startDate,endDate,description} = req.body 
+        const we = await User.findByIdAndUpdate(id,
+            {$push: {workExperience:[{companyName,designation,startDate,endDate,description}]}}
+        )
+        res.status(200).json(we)
     } catch (error) {
         console.error(error);
     }
