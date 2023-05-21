@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require('cors')
 const router = express.Router();
 
-const {loginRecruiter, logOutRecruiter, getRecruiter, createJob, getJobs, getJob, addSelectedApplicant, deleteJob, modifyJob, removeSelectedApplicant, addDetails, getDetails,getAllApplicants,removeApplicant} = require("../controllers/recruiterControllers");
+const {loginRecruiter, logOutRecruiter, getRecruiter, createJob, getJobs, getJob, addSelectedApplicant, deleteJob, modifyJob, removeSelectedApplicant, addDetails, getDetails,getAllApplicants,removeApplicant,getSelectedApplicants} = require("../controllers/recruiterControllers");
 
 const {recruiterCheck} = require("../middleware/recruiterCheck");
 
@@ -25,6 +25,7 @@ router.get('/applicants/:id',getAllApplicants)
 router.post("/addSelectedApplicant", addSelectedApplicant);
 router.post("/removeSelectedApplicant", removeSelectedApplicant);
 router.post("/removeApplicant",removeApplicant);
+router.get("/getSelectedApplicants/:id",getSelectedApplicants)
 router.post("/modifyJob", modifyJob);
 
 router.post("/deleteJob/:jobId", deleteJob);

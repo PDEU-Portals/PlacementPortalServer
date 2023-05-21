@@ -246,3 +246,13 @@ exports.removeApplicant = async (req, res) => {
         return res.status(500).json({ message });
     }
 }
+
+exports.getSelectedApplicants = async(req,res) => {
+    try {
+        const id = req.params.id 
+        const job = await Job.findById(id)
+        res.status(200).json(job.selectedApplicants)
+    } catch (error) {
+        console.error(error);
+    }
+}
