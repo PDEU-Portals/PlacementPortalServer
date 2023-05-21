@@ -36,11 +36,11 @@ exports.registerRecruiter = async (req, res) => {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     try {
-        const data = Recruiter.findOne({ email });
+        const data = await Recruiter.findOne({ email:email });
         if (data) {
             return res.status(409).json({ message: "User already exists" });
         }
-        // const encryptedPass = bcrypt.hash(password, 10);
+        const encryptedPass = await bcrypt.hash(password, 10);
         const recruiter = await Recruiter.create({
             name,
             email,
@@ -164,7 +164,7 @@ exports.getAllRecruiters = async (req,res)=>{
         if(!recruiters){
             return res.status(404).json({message: "No Recruiters Found"});
         }
-        return res.status(200).json({recruiters});
+        return res.status(200).json(recruiters);
     }catch(err){
         return res.status(500).json({message: "Something went Wrong"});
     }

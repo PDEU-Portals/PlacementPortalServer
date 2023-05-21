@@ -74,7 +74,7 @@ exports.getUser = async (req, res) => {
 // Update user details
 exports.updateProfile = async (req, res) => {
     const id = req.body.id;
-    const { rollNo, dateOfBirth, skills, projects, SGPA, workExperience, publications, phoneNumber, socialMediaHandles, name, website, shortDescription, description,branch } = req.body;
+    const { rollNo, dateOfBirth, skills, projects, SGPA, workExperience, publications, phoneNumber, socialMediaHandles, name, website, shortDescription, description,branch, about, github,linkedin,twitter } = req.body;
     let myObj = {};
     if (rollNo) myObj.rollNo = rollNo;
     if (dateOfBirth) myObj.dateOfBirth = dateOfBirth;
@@ -89,6 +89,10 @@ exports.updateProfile = async (req, res) => {
     if(description) myObj.description = description
     if(website) myObj.website = website
     if(branch) myObj.branch = branch
+    if(about) myObj.about = about
+    if(github) myObj.github = github
+    if(twitter) myObj.twitter = twitter
+    if(linkedin) myObj.linkedin = linkedin
     if (socialMediaHandles && socialMediaHandles.length) myObj.socialMediaHandles = socialMediaHandles;
     User.findByIdAndUpdate(id, myObj, {
         new: true,
@@ -161,7 +165,7 @@ exports.applyJob = async (req, res) => {
 }
 
 exports.getAppliedJobs = async (req, res) => {
-    const id = req.body.id;
+    const id = req.params.id;
     // const appliedJobs = await User.findById(id, "jobs_applied");
     const user = await User.findById(id)
     const appliedJobs = user.jobs_applied
@@ -199,4 +203,22 @@ exports.withdrawJobApplication = async (req, res) => {
             return res.status(200).json({ msg: "Withdrawn application successfully" });
         });
     });
+}
+
+exports.addSkills = async(req,res) => {
+    try {
+        const id = req.params.id
+        const {skills}  = req.body
+        const user = await User.findByIdAndUpdate(id,
+            {$push: {skills: skills}},
+            {new: true}
+        )
+        // await user.update(
+        //     {_id: user._id},
+        //     {$push: {skills: skills}}
+        // )
+        res.status(200).json(user.skills)
+    } catch (error) {
+        console.error(error);
+    }
 }

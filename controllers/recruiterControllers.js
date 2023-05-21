@@ -14,8 +14,8 @@ exports.loginRecruiter = async (req, res) => {
         if (!recruiter) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
-        // const isMatch = bcrypt.compare(password, recruiter.password);
-        const isMatch = password === recruiter.password
+        const isMatch = await bcrypt.compare(password, recruiter.password);
+        // const isMatch = password === recruiter.password
         if (!isMatch) {
             return res.status(401).json({ message: "Email ID or password Incorrect" });
         }
@@ -111,7 +111,8 @@ exports.createJob = async (req, res) => {
 
 exports.getJobs = async (req, res) => {
     const id = req.params.id;
-    let appliedJobs = await Recruiter.findById(id, "appliedJobs");
+    let appliedJobs = await Recruiter.findById(id, "jobs");
+    console.log(appliedJobs);
     if (!appliedJobs) appliedJobs = [];
     const jobs = await Job.find({
          _id: { $nin: appliedJobs } 
@@ -192,13 +193,14 @@ exports.deleteJob = async (req, res) => {
 
 exports.addSelectedApplicant = async (req, res) => {
     // ask Frontend to send userId and jobId with request
-    const { userId, jobId } = req.body.userId;
+    const { userId, jobId } = req.body;
     try {
         if(!userId || !jobId) return res.status(400).json({ message: "Please enter all fields" });
         const job = await Job.findById(jobId);
         if (!job) return res.status(404).json({ message: "Job not found" });
         if(job.selectedApplicants.includes(userId)) return res.status(400).json({ message: "User already selected" });
         job.selectedApplicants.push(userId);
+        job.applicants.pull(userId)
         await job.save();
         return res.status(200).json({ message: "User added to selected applicants" });
     } catch (err) {
@@ -214,6 +216,30 @@ exports.removeSelectedApplicant = async (req, res) => {
         if (!job) return res.status(404).json({ message: "Job not found" });
         if(!job.selectedApplicants.includes(userId)) return res.status(400).json({ message: "User not selected" });
         job.selectedApplicants.pull(userId);
+        await job.save();
+    } catch(err){
+        const message = err.message || "Something went wrong";
+        return res.status(500).json({ message });
+    }
+}
+
+exports.getAllApplicants = async(req,res) => {
+    try {
+        const id = req.params.id 
+        const applicant = await Job.findById(id).populate('applicants')
+        res.status(200).json(applicant.applicants)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+exports.removeApplicant = async (req, res) => {
+    const { userId, jobId } = req.body;
+    try {
+        const job = await Job.findById(jobId);
+        if (!job) return res.status(404).json({ message: "Job not found" });
+        if(!job.applicants.includes(userId)) return res.status(400).json({ message: "User not selected" });
+        job.applicants.pull(userId);
         await job.save();
     } catch(err){
         const message = err.message || "Something went wrong";

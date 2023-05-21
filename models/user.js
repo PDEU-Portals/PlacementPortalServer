@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
     skills: {
-        type: [String],
+        type: [String]
     },
     projects: {
         type: [{
@@ -101,7 +101,19 @@ const userSchema = new mongoose.Schema({
             ref: 'Experience'
         }
     ],
-    resume:[
+    resume:
+         {
+            id:{
+                type: String
+            },
+            secure_url:{
+                type:String
+            },
+            public_id:{
+                type:String
+            }
+        },
+    cv:
         {
             id:{
                 type: String
@@ -109,11 +121,62 @@ const userSchema = new mongoose.Schema({
             secure_url:{
                 type:String
             },
-            url:{
+            public_id:{
                 type:String
             }
-        }
-    ],
+        },
+    tenthMarksheet:
+        {
+            id:{
+                type: String
+            },
+            secure_url:{
+                type:String
+            },
+            public_id:{
+                type:String
+            }
+        },
+    twelfthMarksheet:
+        {
+            id:{
+                type: String
+            },
+            secure_url:{
+                type:String
+            },
+            public_id:{
+                type:String
+            }
+        },
+    internship:
+        [{
+            id:{
+                type: String
+            },
+            secure_url:{
+                type:String
+            },
+            public_id:{
+                type:String
+            }
+        }],
+    
+    offerLetter:
+        [{
+            id:{
+                type: String
+            },
+            secure_url:{
+                type:String
+            },
+            public_id:{
+                type:String
+            }
+        }],
+    
+    
+        
     shortDescription:{
         type:String
     },
@@ -122,7 +185,11 @@ const userSchema = new mongoose.Schema({
         type:String,
         default: ""
     },
-    branch: String
+    branch: String,
+    about: String,
+    github:String,
+    linkedin: String,
+    twitter: String
 });
 
 // will run before save and create
