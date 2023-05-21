@@ -53,3 +53,27 @@ exports.uploadCv = async(req,res) => {
 
     res.status(200).json(data)
 }
+
+exports.uploadProfilePhoto = async(req,res) => {
+    try {
+        const id = req.params.id 
+        console.log(req.files);
+        const profile = req.files.profile 
+
+        const response = await cloudinary.uploader.upload(profile.tempFilePath,{
+            folder: 'profiles'
+        })
+
+        const data = await User.findByIdAndUpdate(id,{
+            profilePhoto:{
+                public_id: response.public_id,
+                secure_url: response.secure_url
+            }
+        },{new:true})
+
+        res.status(200).json(data)
+
+    } catch (error) {
+        console.error(error);
+    }
+}

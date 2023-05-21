@@ -113,6 +113,10 @@ const userSchema = new mongoose.Schema({
                 type:String
             }
         },
+    profilePhoto: {
+        public_id: String,
+        secure_url: String
+    },
     cv:
         {
             id:{
