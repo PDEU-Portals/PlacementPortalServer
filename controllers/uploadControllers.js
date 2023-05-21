@@ -16,7 +16,6 @@ exports.uploadResume = async(req,res) => {
     const user = User.findById(id)
 
     const response = await cloudinary.uploader.upload(resume.tempFilePath,{
-        public_id: user.rollNo,
         folder: 'resumes'
     })
 
